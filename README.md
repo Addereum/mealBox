@@ -167,7 +167,7 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe [LICENSE](LICENSE) Da
 
 *   **Issues**: Nutze GitHub Issues für Bug-Reports und Feature-Wünsche
 *   **Diskussionen**: Teile Erfahrungen und Ideen in GitHub Discussions
-*   **E-Mail**: [deine-email@beispiel.com](mailto:deine-email@beispiel.com)
+*   **E-Mail**: [contact@lukas-ross.de](mailto:contact@lukas-ross.de)
 
 * * *
 
