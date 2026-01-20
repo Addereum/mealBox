@@ -23,19 +23,51 @@ class MealListTile extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.teal.withOpacity(0.1),
+            color: _getMealColor(meal.type).withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Icon(
             _getMealIcon(meal.type),
-            color: Colors.teal,
+            color: _getMealColor(meal.type),
           ),
         ),
-        title: Text(
-          '${meal.type}${showDate ? ' (${meal.dateKey})' : ''}',
-          style: TextStyle(fontWeight: FontWeight.w500),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                '${meal.type}${showDate ? ' (${meal.dateKey})' : ''}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: meal.isLoggedLate ? Colors.grey[700] : Colors.black,
+                ),
+              ),
+            ),
+            if (meal.isLoggedLate)
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(
+                  Icons.access_time,
+                  color: Colors.orange,
+                  size: 18,
+                ),
+              ),
+          ],
         ),
-        subtitle: Text('um ${meal.timeString} Uhr'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('um ${meal.timeString} Uhr'),
+            if (meal.isLoggedLate)
+              Text(
+                'Nachgetragen',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.orange[700],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+          ],
+        ),
         trailing: IconButton(
           icon: Icon(Icons.delete_outline, color: Colors.red),
           onPressed: () => onDelete(meal),
@@ -56,6 +88,21 @@ class MealListTile extends StatelessWidget {
         return Icons.cookie;
       default:
         return Icons.restaurant;
+    }
+  }
+
+  Color _getMealColor(String type) {
+    switch (type) {
+      case 'Frühstück':
+        return Colors.orange;
+      case 'Mittag':
+        return Colors.green;
+      case 'Abend':
+        return Colors.blue;
+      case 'Snack':
+        return Colors.red;
+      default:
+        return Colors.teal;
     }
   }
 }
