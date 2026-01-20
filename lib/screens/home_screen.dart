@@ -38,18 +38,26 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoading = false);
   }
 
-  Future<void> _logMeal(String mealType) async {
-    await _mealService.addMeal(mealType);
-    await _loadTodayMeals();
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$mealType hinzugefügt'),
-        backgroundColor: Colors.teal,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  Future<void> _logMeal(String mealType, DateTime? customTime) async {
+  await _mealService.addMeal(mealType, customTime: customTime);
+  await _loadTodayMeals();
+  
+  await Future.delayed(Duration(milliseconds: 100));
+  
+  String message = '$mealType hinzugefügt ✅';
+  if (customTime != null) {
+    message += ' (nachgetragen um ${DateFormat('HH:mm').format(customTime)})';
   }
+  
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.teal,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ),
+  );
+}
 
   Future<void> _deleteMeal(Meal meal) async {
     final shouldDelete = await showDialog<bool>(
@@ -67,11 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showMealDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => MealDialog(onMealSelected: _logMeal),
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (context) => MealDialog(onMealSelected: _logMeal), // Geändert
+  );
+}
 
   void _navigateToHistory() {
     Navigator.push(

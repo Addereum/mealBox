@@ -12,21 +12,23 @@ class MealService {
     return Hive.box(_boxName);
   }
 
-  Future<void> addMeal(String mealType) async {
-    final box = await _getBox();
-    final now = DateTime.now();
-    final meal = Meal(
-      id: now.millisecondsSinceEpoch.toString(),
-      type: mealType,
-      dateTime: now,
-      timeString: DateFormat('HH:mm').format(now),
-    );
+  Future<void> addMeal(String mealType, {DateTime? customTime}) async {
+  final box = await _getBox();
+  final now = customTime ?? DateTime.now();
+  final meal = customTime != null
+      ? Meal.loggedLater(mealType, now)
+      : Meal(
+          id: now.millisecondsSinceEpoch.toString(),
+          type: mealType,
+          dateTime: now,
+          timeString: DateFormat('HH:mm').format(now),
+        );
 
-    final dateKey = meal.dateKey;
-    List<dynamic> todayMeals = box.get(dateKey, defaultValue: []);
-    todayMeals.add(meal.toMap());
-    await box.put(dateKey, todayMeals);
-  }
+  final dateKey = meal.dateKey;
+  List<dynamic> meals = box.get(dateKey, defaultValue: []);
+  meals.add(meal.toMap());
+  await box.put(dateKey, meals);
+}
 
   Future<void> deleteMeal(String dateKey, String mealId) async {
     final box = await _getBox();
