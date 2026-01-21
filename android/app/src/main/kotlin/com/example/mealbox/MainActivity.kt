@@ -1,4 +1,4 @@
-package com.example.mealbox
+package dev.addereum.mealbox
 
 import io.flutter.embedding.android.FlutterActivity
 
