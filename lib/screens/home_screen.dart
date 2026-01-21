@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/meal_service.dart';
+import '../services/settings_service.dart';
 import '../models/meal.dart';
 import '../widgets/meal_dialog.dart';
 import '../widgets/meal_list_tile.dart';
 import '../widgets/delete_confirmation_dialog.dart';
 import 'history_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -16,20 +18,51 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final MealService _mealService = MealService();
+  final SettingsService _settingsService = SettingsService();
   List<Meal> _todayMeals = [];
   bool _isLoading = true;
+  bool _simpleMode = false;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _loadSettings(); // load settings
     _loadTodayMeals();
   }
+
+  Future<void> _loadSettings() async {
+    _simpleMode = await _settingsService.getSimpleMode();
+    setState(() {});
+  }
+
+  Future<void> _logSimpleMeal() async {
+  await _mealService.addMeal('Mahlzeit');
+  await _loadTodayMeals();
+  
+  await Future.delayed(Duration(milliseconds: 100));
+  
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Mahlzeit hinzugefügt ✅'),
+      backgroundColor: Colors.teal,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ),
+  );
+}
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _navigateToSettings() {
+  Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SettingsScreen()),
+    );
   }
 
   Future<void> _loadTodayMeals() async {
@@ -75,11 +108,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showMealDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => MealDialog(onMealSelected: _logMeal), // Geändert
-  );
-}
+    if (_simpleMode) {
+      // SIMPLE MODE: Log without dialog/meal type
+      _logSimpleMeal();
+    } else {
+      // NORMAL MODE: Log with dialog/meal type
+      showDialog(
+        context: context,
+        builder: (context) => MealDialog(onMealSelected: _logMeal),
+      );
+    }
+  }
 
   void _navigateToHistory() {
     Navigator.push(
@@ -96,10 +135,39 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('MealBox 🍱'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.history),
-            onPressed: _navigateToHistory,
-            tooltip: 'Historie',
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'history') {
+                _navigateToHistory();
+              } else if (value == 'settings') {
+                _navigateToSettings();
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<String>(
+                  value: 'history',
+                  child: Row(
+                    children: [
+                      Icon(Icons.history, color: Colors.teal),
+                      SizedBox(width: 10),
+                      Text('Historie'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: 'settings',
+                  child: Row(
+                    children: [
+                      Icon(Icons.settings, color: Colors.teal),
+                      SizedBox(width: 10),
+                      Text('Einstellungen'),
+                    ],
+                  ),
+                ),
+              ];
+            },
           ),
         ],
       ),
@@ -125,21 +193,55 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          DateFormat('EEEE, dd.MM.yyyy').format(DateTime.now()),
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Heute gegessen: ${_todayMeals.length} Mahlzeit${_todayMeals.length != 1 ? 'en' : ''}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white.withOpacity(0.9),
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    DateFormat('EEEE, dd.MM.yyyy').format(DateTime.now()),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Heute gegessen: ${_todayMeals.length} Mahlzeit${_todayMeals.length != 1 ? 'en' : ''}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white.withOpacity(0.9),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Simple Mode Indicator (only when active)
+                            if (_simpleMode)
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.flash_on, size: 14, color: Colors.white),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      'Einfach',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
                       ],
                     ),
@@ -253,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showMealDialog,
         backgroundColor: Colors.teal,
-        child: Icon(Icons.add),
+        child: Icon(_simpleMode ? Icons.check : Icons.add), // ANPASSUNG HIER
       ),
     );
   }
