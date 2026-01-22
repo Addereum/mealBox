@@ -1,4 +1,3 @@
-// services/settings_service.dart
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
@@ -8,11 +7,21 @@ class SettingsService with ChangeNotifier {
   
   bool _simpleMode = false;
   
-  bool get simpleMode => _simpleMode;
+  // Singleton instance
+  static SettingsService? _instance;
   
-  SettingsService() {
+  // Private constructor
+  SettingsService._internal() {
     _loadSettings();
   }
+  
+  // Singleton getter
+  static SettingsService get instance {
+    _instance ??= SettingsService._internal();
+    return _instance!;
+  }
+  
+  bool get simpleMode => _simpleMode;
   
   Future<void> _loadSettings() async {
     final box = await _getBox();
@@ -36,6 +45,6 @@ class SettingsService with ChangeNotifier {
     final box = await _getBox();
     await box.put(_simpleModeKey, value);
     _simpleMode = value;
-    notifyListeners(); // notify all listeners about the change
+    notifyListeners();
   }
 }

@@ -1,40 +1,57 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import '../models/meal.dart';
 
-class MealService {
+class MealService with ChangeNotifier { 
   static const String _boxName = 'mealBox';
-
+  
+  static final MealService _instance = MealService._internal();
+  factory MealService() => _instance;
+  MealService._internal();
+  
+  Box<dynamic>? _box;
+  
+  Future<void> init() async {
+    _box = await Hive.openBox(_boxName);
+  }
+  
   Future<Box> _getBox() async {
-    if (!Hive.isBoxOpen(_boxName)) {
-      return await Hive.openBox(_boxName);
+    if (_box == null || !_box!.isOpen) {
+      _box = await Hive.openBox(_boxName);
     }
-    return Hive.box(_boxName);
+    return _box!;
   }
 
   Future<void> addMeal(String mealType, {DateTime? customTime}) async {
-  final box = await _getBox();
-  final now = customTime ?? DateTime.now();
-  final meal = customTime != null
-      ? Meal.loggedLater(mealType, now)
-      : Meal(
-          id: now.millisecondsSinceEpoch.toString(),
-          type: mealType,
-          dateTime: now,
-          timeString: DateFormat('HH:mm').format(now),
-        );
+    final box = await _getBox();
+    final now = customTime ?? DateTime.now();
+    final meal = customTime != null
+        ? Meal.loggedLater(mealType, now)
+        : Meal(
+            id: now.millisecondsSinceEpoch.toString(),
+            type: mealType,
+            dateTime: now,
+            timeString: DateFormat('HH:mm').format(now),
+          );
 
-  final dateKey = meal.dateKey;
-  List<dynamic> meals = box.get(dateKey, defaultValue: []);
-  meals.add(meal.toMap());
-  await box.put(dateKey, meals);
-}
+    final dateKey = meal.dateKey;
+    List<dynamic> meals = box.get(dateKey, defaultValue: []);
+    meals.add(meal.toMap());
+    await box.put(dateKey, meals);
+    
+    notifyListeners();
+    print('✅ Meal added: $mealType at ${meal.timeString}');
+  }
 
   Future<void> deleteMeal(String dateKey, String mealId) async {
     final box = await _getBox();
     List<dynamic> meals = box.get(dateKey, defaultValue: []);
     meals.removeWhere((m) => m['id'] == mealId);
     await box.put(dateKey, meals);
+    
+    notifyListeners();
+    print('🗑️ Meal deleted: $mealId');
   }
 
   Future<List<Meal>> getMealsForDate(DateTime date) async {
@@ -60,7 +77,6 @@ class MealService {
       }
     }
     
-    // Sortieren nach Datum (neueste zuerst)
     final sortedKeys = allMeals.keys.toList()
       ..sort((a, b) => b.compareTo(a));
     
@@ -80,5 +96,7 @@ class MealService {
   Future<void> clearAllData() async {
     final box = await _getBox();
     await box.clear();
+    notifyListeners();
+    print('🔥 All data cleared');
   }
 }
