@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart'; // WICHTIG: Provider importieren
 import '../models/meal.dart';
 import '../services/meal_service.dart';
 import '../widgets/meal_list_tile.dart';
@@ -13,7 +14,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final MealService _mealService = MealService();
+  // ENTFERNEN: final MealService _mealService = MealService();
   Map<String, List<Meal>> _allMeals = {};
   bool _isLoading = true;
 
@@ -25,7 +26,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<void> _loadMeals() async {
     setState(() => _isLoading = true);
-    _allMeals = await _mealService.getAllMeals();
+    // ÄNDERUNG: MealService über Provider holen
+    final mealService = Provider.of<MealService>(context, listen: false);
+    _allMeals = await mealService.getAllMeals();
     setState(() => _isLoading = false);
   }
 
@@ -39,8 +42,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
 
     if (shouldDelete ?? false) {
-      await _mealService.deleteMeal(meal.dateKey, meal.id);
-      await _loadMeals();
+      // ÄNDERUNG: MealService über Provider holen
+      final mealService = Provider.of<MealService>(context, listen: false);
+      await mealService.deleteMeal(meal.dateKey, meal.id);
+      // Daten automatisch neu laden nach Löschung
+      _loadMeals();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Mahlzeit gelöscht')),
       );
@@ -59,70 +65,74 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Mahlzeiten-Historie 📅'),
-        centerTitle: true,
-      ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : _allMeals.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.history, size: 60, color: Colors.grey[400]),
-                      SizedBox(height: 20),
-                      Text(
-                        'Keine Mahlzeiten vorhanden',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      ),
-                      Text(
-                        'Beginne mit dem Loggen auf der Startseite!',
-                        style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                      ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadMeals,
-                  child: ListView.builder(
-                    itemCount: _allMeals.length,
-                    itemBuilder: (context, index) {
-                      final dateKey = _allMeals.keys.elementAt(index);
-                      final meals = _allMeals[dateKey]!;
-                      
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    return Consumer<MealService>( // WICHTIG: Consumer für automatische Updates
+      builder: (context, mealService, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Mahlzeiten-Historie 📅'),
+            centerTitle: true,
+          ),
+          body: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _allMeals.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                            child: Text(
-                              _formatDateKey(dateKey),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.teal,
-                              ),
-                            ),
+                          Icon(Icons.history, size: 60, color: Colors.grey[400]),
+                          SizedBox(height: 20),
+                          Text(
+                            'Keine Mahlzeiten vorhanden',
+                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
-                          ...meals.map((meal) => MealListTile(
-                                meal: meal,
-                                onDelete: _deleteMeal,
-                                showDate: false,
-                              )),
-                          if (index < _allMeals.length - 1)
-                            Divider(indent: 20, endIndent: 20),
+                          Text(
+                            'Beginne mit dem Loggen auf der Startseite!',
+                            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                          ),
                         ],
-                      );
-                    },
-                  ),
-                ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _loadMeals,
-        backgroundColor: Colors.teal,
-        child: Icon(Icons.refresh),
-      ),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: _loadMeals,
+                      child: ListView.builder(
+                        itemCount: _allMeals.length,
+                        itemBuilder: (context, index) {
+                          final dateKey = _allMeals.keys.elementAt(index);
+                          final meals = _allMeals[dateKey]!;
+                          
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                                child: Text(
+                                  _formatDateKey(dateKey),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.teal,
+                                  ),
+                                ),
+                              ),
+                              ...meals.map((meal) => MealListTile(
+                                    meal: meal,
+                                    onDelete: _deleteMeal,
+                                    showDate: false,
+                                  )),
+                              if (index < _allMeals.length - 1)
+                                Divider(indent: 20, endIndent: 20),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _loadMeals,
+            backgroundColor: Colors.teal,
+            child: Icon(Icons.refresh),
+          ),
+        );
+      },
     );
   }
 }
