@@ -1,3 +1,4 @@
+// screens/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/meal_service.dart';
@@ -27,39 +28,56 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadSettings(); // load settings
+    _loadSettings();
     _loadTodayMeals();
+    
+    // CRITICAL: Add listener for settings changes
+    _settingsService.addListener(_onSettingsChanged);
   }
-
-  Future<void> _loadSettings() async {
-    _simpleMode = await _settingsService.getSimpleMode();
-    setState(() {});
-  }
-
-  Future<void> _logSimpleMeal() async {
-  await _mealService.addMeal('Mahlzeit');
-  await _loadTodayMeals();
   
-  await Future.delayed(Duration(milliseconds: 100));
-  
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('Mahlzeit hinzugefügt ✅'),
-      backgroundColor: Colors.teal,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ),
-  );
-}
-
   @override
   void dispose() {
+    // CRITICAL: Remove listener to prevent memory leaks
+    _settingsService.removeListener(_onSettingsChanged);
     _scrollController.dispose();
     super.dispose();
   }
+  
+  void _onSettingsChanged() {
+    // Called when settings change
+    if (_settingsService.simpleMode != _simpleMode) {
+      setState(() {
+        _simpleMode = _settingsService.simpleMode;
+      });
+      print('Simple Mode updated in HomeScreen: $_simpleMode');
+    }
+  }
+
+  Future<void> _loadSettings() async {
+    // Get current value directly from service
+    setState(() {
+      _simpleMode = _settingsService.simpleMode;
+    });
+  }
+
+  Future<void> _logSimpleMeal() async {
+    await _mealService.addMeal('Meal');
+    await _loadTodayMeals();
+    
+    await Future.delayed(Duration(milliseconds: 100));
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Meal added ✅'),
+        backgroundColor: Colors.teal,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
 
   void _navigateToSettings() {
-  Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SettingsScreen()),
     );
@@ -72,25 +90,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _logMeal(String mealType, DateTime? customTime) async {
-  await _mealService.addMeal(mealType, customTime: customTime);
-  await _loadTodayMeals();
-  
-  await Future.delayed(Duration(milliseconds: 100));
-  
-  String message = '$mealType hinzugefügt ✅';
-  if (customTime != null) {
-    message += ' (nachgetragen um ${DateFormat('HH:mm').format(customTime)})';
+    await _mealService.addMeal(mealType, customTime: customTime);
+    await _loadTodayMeals();
+    
+    await Future.delayed(Duration(milliseconds: 100));
+    
+    String message = '$mealType added ✅';
+    if (customTime != null) {
+      message += ' (logged at ${DateFormat('HH:mm').format(customTime)})';
+    }
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.teal,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
-  
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.teal,
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    ),
-  );
-}
 
   Future<void> _deleteMeal(Meal meal) async {
     final shouldDelete = await showDialog<bool>(
@@ -231,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Icon(Icons.flash_on, size: 14, color: Colors.white),
                                     SizedBox(width: 4),
                                     Text(
-                                      'Einfach',
+                                      'Simple',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.white,
@@ -327,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  'Drücke auf "Hinzufügen" um zu beginnen',
+                                  'Drücke auf Hinzufügen, um zu beginnen!',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[500],
@@ -355,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showMealDialog,
         backgroundColor: Colors.teal,
-        child: Icon(_simpleMode ? Icons.check : Icons.add), // ANPASSUNG HIER
+        child: Icon(_simpleMode ? Icons.check : Icons.add),
       ),
     );
   }

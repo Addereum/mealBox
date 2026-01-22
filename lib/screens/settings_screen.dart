@@ -1,3 +1,4 @@
+// screens/settings_screen.dart
 import 'package:flutter/material.dart';
 import '../services/settings_service.dart';
 
@@ -17,18 +18,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     _loadSettings();
+    
+    // Listen for changes in the service
+    _settingsService.addListener(_onSettingsChanged);
+  }
+  
+  @override
+  void dispose() {
+    // Remove listener to prevent memory leaks
+    _settingsService.removeListener(_onSettingsChanged);
+    super.dispose();
+  }
+  
+  void _onSettingsChanged() {
+    // Called when service calls notifyListeners()
+    if (_settingsService.simpleMode != _simpleMode) {
+      setState(() {
+        _simpleMode = _settingsService.simpleMode;
+      });
+    }
   }
   
   Future<void> _loadSettings() async {
-    _simpleMode = await _settingsService.getSimpleMode();
-    setState(() {});
+    // Get current value directly from service
+    setState(() {
+      _simpleMode = _settingsService.simpleMode;
+    });
   }
   
   Future<void> _toggleSimpleMode(bool value) async {
-    setState(() {
-      _simpleMode = value;
-    });
+    // Set via service - it will call notifyListeners()
     await _settingsService.setSimpleMode(value);
+    // NO setState() needed here - handled by _onSettingsChanged
   }
   
   @override
@@ -41,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           ListTile(
             leading: Icon(Icons.accessibility_new, color: Colors.teal),
-            title: Text('Einfacher Modus'),
+            title: Text('Simpler Modus'),
             subtitle: Text('Nur ein Button, keine Auswahl'),
             trailing: Switch(
               value: _simpleMode,
@@ -53,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.notifications, color: Colors.teal),
             title: Text('Erinnerungen'),
-            subtitle: Text('Sanfte Erinnerungen an Mahlzeiten'),
+            subtitle: Text('Sanfte Erinnerungen aktivieren'),
             trailing: Switch(
               value: _notifications,
               onChanged: (value) {
@@ -66,24 +87,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: Icon(Icons.palette, color: Colors.teal),
-            title: Text('Design'),
-            subtitle: Text('Farbschema ändern'),
+            title: Text('Farbschema'),
+            subtitle: Text('Farbschema auswählen'),
             onTap: () {
-              // Später implementieren
+              // To be implemented later
             },
           ),
           ListTile(
             leading: Icon(Icons.security, color: Colors.teal),
             title: Text('Datenschutz'),
-            subtitle: Text('Alle Daten sind lokal gespeichert'),
+            subtitle: Text('Alle daten werden lokal gespeichert'),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Datenschutz'),
+                  title: Text('Privacy'),
                   content: Text(
-                    'Alle Daten werden nur lokal auf deinem Gerät gespeichert. '
-                    'Keine Informationen werden an Server gesendet.',
+                    'Alle daten sind lokal auf ihrem gerät gespeichert.'
+                    'Es geht keine Information auf einen Server.',
                   ),
                   actions: [
                     TextButton(
