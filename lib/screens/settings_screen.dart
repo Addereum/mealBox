@@ -367,15 +367,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: _clearAllData,
           ),
           Divider(),
-          
-          // Theme
+
+          // Dark Mode
           ListTile(
-            leading: Icon(Icons.palette, color: Colors.teal),
-            title: Text('Farbschema'),
-            subtitle: Text('Farbschema auswählen'),
-            onTap: () {
-              // To be implemented later
-            },
+            leading: Icon(Icons.dark_mode, color: Colors.teal),
+            title: Text('Dark Mode'),
+            subtitle: Text('Dunkles Design aktivieren'),
+            trailing: Switch(
+              value: _settingsService.themeMode == ThemeMode.dark,
+              onChanged: (value) {
+                _settingsService.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+              },
+              activeColor: Colors.teal,
+            ),
           ),
           
           // Privacy
