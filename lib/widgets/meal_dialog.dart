@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../services/settings_service.dart';
 
 class MealDialog extends StatefulWidget {
-  final Function(String, DateTime?) onMealSelected;
+  final Function(String, DateTime?, String?) onMealSelected;
 
   const MealDialog({Key? key, required this.onMealSelected}) : super(key: key);
 
@@ -14,6 +15,8 @@ class _MealDialogState extends State<MealDialog> {
   DateTime? _customTime;
   bool _showTimePicker = false;
   TimeOfDay _selectedTime = TimeOfDay.now();
+  String? _selectedEnergy;
+  final SettingsService _settingsService = SettingsService.instance;
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -47,7 +50,7 @@ class _MealDialogState extends State<MealDialog> {
   }
 
   void _logMeal(String mealType) {
-    widget.onMealSelected(mealType, _customTime);
+    widget.onMealSelected(mealType, _customTime, _selectedEnergy);
     Navigator.pop(context);
   }
 
@@ -188,6 +191,35 @@ class _MealDialogState extends State<MealDialog> {
             
             Divider(height: 1),
             
+            // Energy Level
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Energie-Level (optional):',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildEnergyButton('🪫 Low', Colors.red),
+                      _buildEnergyButton('🔋 Med', Colors.orange),
+                      _buildEnergyButton('⚡ High', Colors.green),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            Divider(height: 1),
+            
             // Meal Options Grid
             Padding(
               padding: EdgeInsets.all(20),
@@ -198,12 +230,11 @@ class _MealDialogState extends State<MealDialog> {
                 childAspectRatio: 1.5,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 15,
-                children: [
-                  _buildMealOption('🍳', 'Frühstück', Colors.orange[100]!),
-                  _buildMealOption('🥗', 'Mittag', Colors.green[100]!),
-                  _buildMealOption('🍽️', 'Abend', Colors.blue[100]!),
-                  _buildMealOption('🍎', 'Snack', Colors.red[100]!),
-                ],
+                children: List.generate(4, (index) {
+                  final colors = [Colors.orange[100]!, Colors.green[100]!, Colors.blue[100]!, Colors.red[100]!];
+                  final label = _settingsService.mealNames.length > index ? _settingsService.mealNames[index] : 'Mahlzeit ${index + 1}';
+                  return _buildMealOption(label, colors[index]);
+                }),
               ),
             ),
             
@@ -232,7 +263,29 @@ class _MealDialogState extends State<MealDialog> {
     );
   }
 
-  Widget _buildMealOption(String emoji, String label, Color color) {
+  Widget _buildEnergyButton(String label, MaterialColor color) {
+    final isSelected = _selectedEnergy == label;
+    return ChoiceChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (selected) {
+        setState(() {
+          _selectedEnergy = selected ? label : null;
+        });
+      },
+      selectedColor: color[100],
+      backgroundColor: Colors.grey[100],
+      side: BorderSide(
+        color: isSelected ? color[300]! : Colors.grey[300]!,
+      ),
+      labelStyle: TextStyle(
+        color: isSelected ? color[900] : Colors.grey[700],
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+    );
+  }
+
+  Widget _buildMealOption(String label, Color color) {
     return Material(
       borderRadius: BorderRadius.circular(15),
       color: color,
@@ -247,17 +300,16 @@ class _MealDialogState extends State<MealDialog> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                emoji,
-                style: TextStyle(fontSize: 32),
-              ),
-              SizedBox(height: 10),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[800],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[800],
+                  ),
                 ),
               ),
             ],

@@ -10,6 +10,10 @@ import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import '../services/settings_service.dart';
 import '../services/meal_service.dart';
+import '../services/notification_service.dart'; // Hinzugefügt
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'meal_names_screen.dart';
 import '../models/meal.dart';
 import 'home_screen.dart';
 
@@ -25,6 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final MealService _mealService = MealService();
   bool _simpleMode = false;
   bool _notifications = true;
+  bool _showStats = true;
   bool _isExporting = false;
   bool _isImporting = false;
   
@@ -49,11 +54,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _simpleMode = _settingsService.simpleMode;
       });
     }
+    if (_settingsService.notifications != _notifications) {
+      setState(() {
+        _notifications = _settingsService.notifications;
+      });
+    }
+    if (_settingsService.showStats != _showStats) {
+      setState(() {
+        _showStats = _settingsService.showStats;
+      });
+    }
   }
   
   Future<void> _loadSettings() async {
     setState(() {
       _simpleMode = _settingsService.simpleMode;
+      _notifications = _settingsService.notifications;
+      _showStats = _settingsService.showStats;
     });
   }
   
@@ -305,6 +322,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           Divider(),
+
+          // Meal Names
+          ListTile(
+            leading: Icon(Icons.edit_note, color: Colors.teal),
+            title: Text('Mahlzeiten umbenennen'),
+            subtitle: Text('Eigene Namen und Emojis für Buttons festlegen'),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MealNamesScreen()),
+              );
+            },
+          ),
+          Divider(),
           
           // Notifications
           ListTile(
@@ -313,10 +345,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: Text('Sanfte Erinnerungen aktivieren'),
             trailing: Switch(
               value: _notifications,
-              onChanged: (value) {
-                setState(() {
-                  _notifications = value;
-                });
+              onChanged: (value) async {
+                await _settingsService.setNotifications(value);
+                if (value) {
+                  await NotificationService().requestPermissions();
+                  await NotificationService().scheduleMealReminders();
+                } else {
+                  await NotificationService().cancelAllNotifications();
+                }
+              },
+              activeColor: Colors.teal,
+            ),
+          ),
+          Divider(),
+          
+          // Weekly Stats
+          ListTile(
+            leading: Icon(Icons.bar_chart, color: Colors.teal),
+            title: Text('Wochen-Statistik'),
+            subtitle: Text('Streak-Übersicht auf Startseite anzeigen'),
+            trailing: Switch(
+              value: _showStats,
+              onChanged: (value) async {
+                await _settingsService.setShowStats(value);
               },
               activeColor: Colors.teal,
             ),

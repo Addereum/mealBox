@@ -57,6 +57,15 @@ class MealListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('um ${meal.timeString} Uhr'),
+            if (meal.energyLevel != null)
+              Text(
+                meal.energyLevel!,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.teal[700],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             if (meal.isLoggedLate)
               Text(
                 'Nachgetragen',
