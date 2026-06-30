@@ -8,8 +8,10 @@ import '../models/meal.dart';
 import '../widgets/meal_dialog.dart';
 import '../widgets/meal_list_tile.dart';
 import '../widgets/delete_confirmation_dialog.dart';
+import '../widgets/weekly_stats_widget.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
+import 'safe_foods_screen.dart'; // Hinzugefügt
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final SettingsService _settingsService = SettingsService.instance;
   bool _isLoading = true;
   bool _simpleMode = false;
+  bool _showStats = true;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -44,11 +47,17 @@ class _HomeScreenState extends State<HomeScreen> {
         _simpleMode = _settingsService.simpleMode;
       });
     }
+    if (_settingsService.showStats != _showStats) {
+      setState(() {
+        _showStats = _settingsService.showStats;
+      });
+    }
   }
 
   Future<void> _loadSettings() async {
     setState(() {
       _simpleMode = _settingsService.simpleMode;
+      _showStats = _settingsService.showStats;
     });
   }
 
@@ -73,11 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _logMeal(String mealType, DateTime? customTime) async {
+  Future<void> _logMeal(String mealType, DateTime? customTime, String? energyLevel) async {
     final mealService = Provider.of<MealService>(context, listen: false);
-    await mealService.addMeal(mealType, customTime: customTime);
+    await mealService.addMeal(mealType, customTime: customTime, energyLevel: energyLevel);
     
     String message = '$mealType added ✅';
+    if (energyLevel != null) {
+      message += ' ($energyLevel)';
+    }
     if (customTime != null) {
       message += ' (logged at ${DateFormat('HH:mm').format(customTime)})';
     }
@@ -146,6 +158,16 @@ class _HomeScreenState extends State<HomeScreen> {
               appBar: AppBar(
                 title: Text('MealBox 🍱'),
                 actions: [
+                  IconButton(
+                    icon: Text('🛟', style: TextStyle(fontSize: 20)),
+                    tooltip: 'Safe Foods',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SafeFoodsScreen()),
+                      );
+                    },
+                  ),
                   PopupMenuButton<String>(
                     icon: Icon(Icons.more_vert),
                     onSelected: (value) {
@@ -258,6 +280,56 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                        
+                        SizedBox(height: 16),
+                        
+                        // Water Tracker
+                        FutureBuilder<int>(
+                          future: mealService.getWaterForDate(DateTime.now()),
+                          builder: (context, snapshot) {
+                            final amount = snapshot.data ?? 0;
+                            return Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.water_drop, color: Colors.blue[400]),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Wasser: $amount Glas',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.blue[800],
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: Icon(Icons.remove, color: amount > 0 ? Colors.blue[800] : Colors.grey),
+                                    onPressed: amount > 0 ? () => mealService.removeWater(DateTime.now()) : null,
+                                    constraints: BoxConstraints(),
+                                    padding: EdgeInsets.all(4),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.add, color: Colors.blue[800]),
+                                    onPressed: () => mealService.addWater(DateTime.now()),
+                                    constraints: BoxConstraints(),
+                                    padding: EdgeInsets.all(4),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+
+                        if (_showStats) ...[
+                          SizedBox(height: 16),
+                          WeeklyStatsWidget(),
+                        ],
                         
                         SizedBox(height: 24),
                         
