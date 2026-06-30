@@ -34,7 +34,11 @@ void main() async {
   
   // Widget Callback registrieren (HomeWidget funktioniert nicht im Web-Browser)
   if (!kIsWeb) {
-    HomeWidget.registerInteractivityCallback(interactiveCallback);
+    try {
+      await HomeWidget.registerInteractivityCallback(interactiveCallback);
+    } catch (e) {
+      debugPrint('HomeWidget Registrierungs-Fehler: $e');
+    }
   }
 
   tz.initializeTimeZones();
