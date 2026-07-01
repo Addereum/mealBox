@@ -111,6 +111,13 @@ class SettingsService with ChangeNotifier {
     }
   }
 
+  Future<void> setSafeFoods(List<String> foods) async {
+    _safeFoods = foods;
+    final box = await _getBox();
+    await box.put(_safeFoodsKey, _safeFoods);
+    notifyListeners();
+  }
+
   Future<void> setMealNames(List<String> names) async {
     _mealNames = names;
     final box = await _getBox();
