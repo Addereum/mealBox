@@ -181,4 +181,21 @@ class MealService with ChangeNotifier {
       await setWaterForDate(date, current - 1);
     }
   }
+
+  Future<Map<String, int>> getAllWaterData() async {
+    final box = await _getWaterBox();
+    final Map<String, int> allWater = {};
+    for (final key in box.keys) {
+      allWater[key.toString()] = box.get(key) as int;
+    }
+    return allWater;
+  }
+  
+  Future<void> importWaterData(Map<String, dynamic> data) async {
+    final box = await _getWaterBox();
+    for (final entry in data.entries) {
+      await box.put(entry.key, entry.value as int);
+    }
+    notifyListeners();
+  }
 }

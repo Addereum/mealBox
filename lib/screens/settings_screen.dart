@@ -82,15 +82,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isExporting = true);
     
     try {
-      // 1. Sammle alle Mahlzeiten
+      // 1. Sammle alle Mahlzeiten und Wasser
       final allMeals = await _mealService.getAllMeals();
+      final allWater = await _mealService.getAllWaterData();
       
       // 2. Konvertiere zu JSON
       final exportData = {
         'app': 'MealBox',
-        'version': '1.0',
+        'version': '1.1',
         'exportDate': DateTime.now().toIso8601String(),
         'simpleMode': _simpleMode,
+        'safeFoods': _settingsService.safeFoods,
+        'mealNames': _settingsService.mealNames,
+        'waterData': allWater,
         'meals': allMeals.entries.map((entry) {
           return {
             'date': entry.key,
@@ -189,7 +193,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // Alte Daten löschen
       await mealService.clearAllData();
       
-      // Neue Daten importieren
+      // Neue Daten importieren (Einstellungen)
+      if (importData['safeFoods'] != null) {
+        await _settingsService.setSafeFoods((importData['safeFoods'] as List).cast<String>());
+      }
+      if (importData['mealNames'] != null) {
+        await _settingsService.setMealNames((importData['mealNames'] as List).cast<String>());
+      }
+      if (importData['waterData'] != null) {
+        await mealService.importWaterData(Map<String, dynamic>.from(importData['waterData']));
+      }
+      
+      // Neue Daten importieren (Mahlzeiten)
       if (importData['meals'] != null) {
         final List<Meal> importedMeals = [];
         
