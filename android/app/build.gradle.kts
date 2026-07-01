@@ -54,10 +54,14 @@ android {
             if (hasKeystore) {
                 signingConfig = signingConfigs.getByName("release")
             } else {
-                // Den Fehler auskommentieren, damit Debug wieder läuft:
-                // throw GradleException("key.properties fehlt")
                 println("Hinweis: key.properties fehlt. Release-Builds werden nicht funktionieren.")
             }
+            
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
         getByName("debug") {
             // debug default signing
