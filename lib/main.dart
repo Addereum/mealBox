@@ -30,43 +30,64 @@ Future<void> interactiveCallback(Uri? uri) async {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Widget Callback registrieren (HomeWidget funktioniert nicht im Web-Browser)
-  if (!kIsWeb) {
-    try {
-      await HomeWidget.registerInteractivityCallback(interactiveCallback);
-    } catch (e) {
-      debugPrint('HomeWidget Registrierungs-Fehler: $e');
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    
+    // Widget Callback registrieren (HomeWidget funktioniert nicht im Web-Browser)
+    if (!kIsWeb) {
+      try {
+        HomeWidget.registerInteractivityCallback(interactiveCallback);
+      } catch (e) {
+        debugPrint('HomeWidget Registrierungs-Fehler: $e');
+      }
     }
+
+    tz.initializeTimeZones();
+    
+    // Lokalisierung für Deutsch initialisieren
+    await initializeDateFormatting('de_DE', null);
+    
+    await Hive.initFlutter();
+    Hive.registerAdapter(MealAdapter());
+    
+    // MealService initialisieren
+    final mealService = MealService();
+    await mealService.init();
+
+    // SettingsService initialisieren
+    final settingsService = SettingsService.instance;
+
+    // NotificationService initialisieren
+    final notificationService = NotificationService();
+    await notificationService.init();
+    if (settingsService.notifications) {
+      await notificationService.scheduleMealReminders();
+    }
+    
+    runApp(
+      ChangeNotifierProvider<MealService>.value(
+        value: mealService,
+        child: const MealBoxApp(),
+      ),
+    );
+  } catch (e, stacktrace) {
+    // Failsafe: Zeige den genauen Fehler auf dem Bildschirm an (auch im Release-Modus)
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Text(
+                  'Kritischer Start-Fehler:\n$e\n\n$stacktrace',
+                  style: const TextStyle(color: Colors.red, fontSize: 14),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
-
-  tz.initializeTimeZones();
-  
-  // Lokalisierung für Deutsch initialisieren
-  await initializeDateFormatting('de_DE', null);
-  
-  await Hive.initFlutter();
-  Hive.registerAdapter(MealAdapter());
-  
-  // MealService initialisieren
-  final mealService = MealService();
-  await mealService.init();
-
-  // SettingsService initialisieren
-  final settingsService = SettingsService.instance;
-
-  // NotificationService initialisieren
-  final notificationService = NotificationService();
-  await notificationService.init();
-  if (settingsService.notifications) {
-    await notificationService.scheduleMealReminders();
-  }
-  
-  runApp(
-    ChangeNotifierProvider<MealService>.value(
-      value: mealService,
-      child: const MealBoxApp(),
-    ),
-  );
 }
