@@ -54,7 +54,9 @@ android {
             if (hasKeystore) {
                 signingConfig = signingConfigs.getByName("release")
             } else {
-                throw GradleException("key.properties fehlt")
+                // Den Fehler auskommentieren, damit Debug wieder läuft:
+                // throw GradleException("key.properties fehlt")
+                println("Hinweis: key.properties fehlt. Release-Builds werden nicht funktionieren.")
             }
         }
         getByName("debug") {

@@ -206,8 +206,10 @@ class _MealDialogState extends State<MealDialog> {
                     ),
                   ),
                   SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8.0,
+                    runSpacing: 8.0,
                     children: [
                       _buildEnergyButton('🪫 Low', Colors.red),
                       _buildEnergyButton('🔋 Med', Colors.orange),
