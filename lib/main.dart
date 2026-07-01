@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // WICHTIG: Provider hinzufügen
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:hive/hive.dart';
@@ -7,6 +7,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:home_widget/home_widget.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:ui';
+import 'dart:isolate';
+
 import 'app/mealbox_app.dart';
 import 'services/meal_service.dart';
 import 'services/settings_service.dart';
@@ -17,6 +20,15 @@ import 'models/meal.dart';
 @pragma('vm:entry-point')
 Future<void> interactiveCallback(Uri? uri) async {
   if (uri?.host == 'log_simple_meal') {
+    // 1. Prüfen, ob die Haupt-App (Main Isolate) noch im Hintergrund läuft
+    final SendPort? sendPort = IsolateNameServer.lookupPortByName('home_widget_port');
+    if (sendPort != null) {
+      // App läuft! Wir delegieren die Aufgabe an die Haupt-App, um Hive-Konflikte zu vermeiden
+      sendPort.send('log_simple_meal');
+      return;
+    }
+
+    // 2. App ist komplett geschlossen. Wir können Hive sicher initialisieren.
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(MealAdapter());
@@ -24,7 +36,6 @@ Future<void> interactiveCallback(Uri? uri) async {
     final mealService = MealService();
     await mealService.init();
     
-    // Wir loggen eine schnelle Mahlzeit
     await mealService.addMeal('Widget Log 🍱', energyLevel: '🪫 Low');
   }
 }
@@ -64,6 +75,16 @@ void main() async {
       await notificationService.scheduleMealReminders();
     }
     
+    // Hintergrund-Kommunikation einrichten (IsolateNameServer)
+    final port = ReceivePort();
+    IsolateNameServer.removePortNameMapping('home_widget_port');
+    IsolateNameServer.registerPortWithName(port.sendPort, 'home_widget_port');
+    port.listen((message) async {
+      if (message == 'log_simple_meal') {
+        await mealService.addMeal('Widget Log 🍱', energyLevel: '🪫 Low');
+      }
+    });
+
     runApp(
       ChangeNotifierProvider<MealService>.value(
         value: mealService,
