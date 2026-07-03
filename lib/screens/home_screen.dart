@@ -11,7 +11,8 @@ import '../widgets/delete_confirmation_dialog.dart';
 import '../widgets/weekly_stats_widget.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
-import 'safe_foods_screen.dart'; // Hinzugefügt
+import 'safe_foods_screen.dart';
+import '../services/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -58,7 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _simpleMode = _settingsService.simpleMode;
       _showStats = _settingsService.showStats;
+      _isLoading = false;
     });
+    
+    // Beim App-Start die Benachrichtigungsberechtigung (Android 13+) abfragen
+    if (_settingsService.notifications) {
+      await NotificationService().requestPermissions();
+      await NotificationService().scheduleMealReminders();
+    }
   }
 
   Future<void> _logSimpleMeal() async {
