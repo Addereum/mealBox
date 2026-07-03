@@ -3,7 +3,7 @@ MealBox 🍱
 
 **Eine einfache, wertfreie App zum Tracken von Mahlzeiten für Menschen mit ADHS, Autismus, Depressionen oder alle, die Schwierigkeiten mit regelmäßigem Essen haben.**
 
-Lizenz: MIT
+Lizenz: GPL-3.0
 PRs willkommen 
 Flutter 3.0+
 
@@ -152,7 +152,7 @@ Wir freuen uns über Beiträge! Ob du Entwickler, Designer oder jemand mit Erfah
 📄 Lizenz
 ---------
 
-Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe [LICENSE](LICENSE) Datei für Details.
+Dieses Projekt ist unter der GPL-3.0 Lizenz lizenziert - siehe [LICENSE](LICENSE) Datei für Details.
 
 🙏 Danksagungen
 ---------------
