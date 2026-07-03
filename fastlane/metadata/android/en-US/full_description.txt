@@ -1,0 +1,13 @@
+MealBox is a minimalist, low-stimulus meal and hydration tracker specifically designed to reduce the cognitive load of tracking your nutrition.
+
+Whether in daily life or during stressful periods, MealBox completely avoids calorie counting, complicated macros, or cluttered interfaces. Instead, the app focuses on the essentials: when did you eat what, and how much did you drink?
+
+**Features:**
+- 🛡️ **Safe Foods:** A dedicated vault for familiar foods that always work, reducing decision fatigue.
+- 💧 **Hydration Tracker:** A simple counter for your daily water intake.
+- ⚡ **Energy Levels:** Optional tracking of your energy (High, Mid, Low) during meals.
+- 📴 **100% Offline & Local:** Your data belongs to you. There is no cloud, no servers, no registration, and no ads.
+- 📱 **Android Widget:** Quickly log meals directly from your home screen.
+- 💾 **Export & Import:** A complete backup system allows you to securely save your data locally as a JSON file.
+
+MealBox is entirely Open Source and respects your privacy.
