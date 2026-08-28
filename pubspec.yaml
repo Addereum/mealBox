@@ -60,6 +60,11 @@ dependencies:
   
   # Kamera & Fotos
   image_picker: ^1.1.2
+  
+  # Export (PDF & CSV)
+  csv: ^5.1.0
+  pdf: ^3.11.1
+  path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:

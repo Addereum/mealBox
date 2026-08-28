@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import '../services/settings_service.dart';
 import '../services/meal_service.dart';
+import '../services/export_service.dart';
 import '../services/notification_service.dart'; // Hinzugefügt
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -435,6 +436,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               activeColor: Colors.teal,
             ),
+          ),
+          Divider(),
+
+          // Therapie-Export Section
+          Padding(
+            padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
+            child: Text(
+              'Therapie-Export',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.picture_as_pdf, color: Colors.redAccent),
+            title: Text('Als PDF exportieren'),
+            subtitle: Text('Tagebuch für den Arzt/Therapeuten'),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () async {
+              try {
+                await ExportService().exportAsPdf();
+              } catch (e) {
+                if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler: $e')));
+              }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.table_chart, color: Colors.green),
+            title: Text('Als CSV (Excel) exportieren'),
+            subtitle: Text('Rohdaten als Tabelle'),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () async {
+              try {
+                await ExportService().exportAsCsv();
+              } catch (e) {
+                if(mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler: $e')));
+              }
+            },
           ),
           Divider(),
 
