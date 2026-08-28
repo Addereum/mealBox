@@ -53,3 +53,4 @@ app.*.map.json
 android/app/keystore.txt
 .gradle_local/
 SKILL.md
+REDESIGN-SKILL.md
