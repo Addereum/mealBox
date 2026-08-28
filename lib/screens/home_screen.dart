@@ -10,6 +10,7 @@ import '../widgets/meal_dialog.dart';
 import '../widgets/meal_list_tile.dart';
 import '../widgets/delete_confirmation_dialog.dart';
 import '../widgets/weekly_stats_widget.dart';
+import '../widgets/bouncing_button.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'safe_foods_screen.dart';
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Meal added ✅'),
-        backgroundColor: Colors.teal,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -141,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.teal,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -300,8 +301,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         // Header
                         Card(
-                          color: Colors.teal,
-                          elevation: 4,
+                          color: Theme.of(context).colorScheme.primary,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -429,40 +430,54 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: _showMealDialog,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.teal,
-                                  foregroundColor: Colors.white,
+                              BouncingButton(
+                                onTap: _showMealDialog,
+                                child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                        blurRadius: 12,
+                                        offset: Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
-                                  elevation: 4,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.add, size: 24),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Hinzufügen',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.add, size: 24, color: Theme.of(context).colorScheme.onPrimary),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Hinzufügen',
+                                        style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 12),
-                              TextButton.icon(
-                                onPressed: _triggerSOS,
-                                icon: Icon(Icons.sos, color: Colors.red),
-                                label: Text(
-                                  'Gar keine Energie?',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                style: TextButton.styleFrom(
-                                  backgroundColor: Colors.red.withOpacity(0.1),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              BouncingButton(
+                                onTap: _triggerSOS,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.sos, color: Colors.red),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Gar keine Energie?',
+                                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -544,8 +559,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           floatingActionButton: FloatingActionButton(
                 onPressed: _showMealDialog,
-                backgroundColor: Colors.teal,
-                child: Icon(_simpleMode ? Icons.check : Icons.add),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: Icon(_simpleMode ? Icons.check : Icons.add, color: Theme.of(context).colorScheme.onPrimary),
               ),
             );
           },

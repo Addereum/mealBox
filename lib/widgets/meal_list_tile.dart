@@ -17,8 +17,7 @@ class MealListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      elevation: 1,
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 6),
       child: ListTile(
         leading: meal.imagePath != null
             ? GestureDetector(

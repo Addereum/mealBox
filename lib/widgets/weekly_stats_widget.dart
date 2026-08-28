@@ -49,8 +49,7 @@ class WeeklyStatsWidget extends StatelessWidget {
         }
 
         return Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          margin: EdgeInsets.symmetric(vertical: 8),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -64,7 +63,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.teal[800],
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     if (currentStreak > 1)
@@ -105,7 +104,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                           DateFormat('E', 'de_DE').format(date).substring(0, 2),
                           style: TextStyle(
                             fontSize: 12,
-                            color: isToday ? Colors.teal : Colors.grey[600],
+                            color: isToday ? Theme.of(context).colorScheme.primary : Colors.grey[600],
                             fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
@@ -115,9 +114,9 @@ class WeeklyStatsWidget extends StatelessWidget {
                           height: 28,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: hasMeals ? Colors.teal : Colors.grey[200],
+                            color: hasMeals ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surfaceContainerHighest,
                             border: isToday && !hasMeals 
-                                ? Border.all(color: Colors.teal, width: 2) 
+                                ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2) 
                                 : null,
                           ),
                           child: hasMeals 

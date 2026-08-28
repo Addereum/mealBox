@@ -53,6 +53,7 @@ dependencies:
   # UX / UI
   confetti: ^0.7.0
   dynamic_color: 1.7.0
+  google_fonts: ^6.2.1
   
   # Info & Links
   url_launcher: ^6.3.0
