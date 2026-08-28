@@ -261,16 +261,21 @@ class _MealDialogState extends State<MealDialog> {
             if (_settingsService.trackMedications) ...[
               Divider(height: 1),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Column(
                   children: [
-                    Icon(Icons.medication, color: Colors.red[400]),
-                    SizedBox(width: 10),
-                    Text(
-                      'Medikamente genommen?',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.medication, color: Colors.red[400]),
+                        SizedBox(width: 8),
+                        Text(
+                          'Medikamente genommen?',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface),
+                        ),
+                      ],
                     ),
-                    Spacer(),
+                    SizedBox(height: 8),
                     Switch(
                       value: _tookMeds,
                       onChanged: (val) => setState(() => _tookMeds = val),
