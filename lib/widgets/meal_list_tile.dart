@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/meal.dart';
 
@@ -19,18 +20,41 @@ class MealListTile extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       elevation: 1,
       child: ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: _getMealColor(meal.type).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Icon(
-            _getMealIcon(meal.type),
-            color: _getMealColor(meal.type),
-          ),
-        ),
+        leading: meal.imagePath != null
+            ? GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(File(meal.imagePath!)),
+                      ),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(
+                    File(meal.imagePath!),
+                    width: 45,
+                    height: 45,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              )
+            : Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: _getMealColor(meal.type).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  _getMealIcon(meal.type),
+                  color: _getMealColor(meal.type),
+                ),
+              ),
         title: Row(
           children: [
             Expanded(
@@ -38,10 +62,19 @@ class MealListTile extends StatelessWidget {
                 '${meal.type}${showDate ? ' (${meal.dateKey})' : ''}',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: meal.isLoggedLate ? Colors.grey[700] : Colors.black,
+                  color: meal.isLoggedLate ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
+            if (meal.tookMeds == true)
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(
+                  Icons.medication,
+                  color: Colors.red[400],
+                  size: 18,
+                ),
+              ),
             if (meal.isLoggedLate)
               Padding(
                 padding: EdgeInsets.only(left: 8),
@@ -62,7 +95,7 @@ class MealListTile extends StatelessWidget {
                 meal.energyLevel!,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.teal[700],
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -71,7 +104,7 @@ class MealListTile extends StatelessWidget {
                 'Nachgetragen',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.orange[700],
+                  color: Colors.orange,
                   fontStyle: FontStyle.italic,
                 ),
               ),

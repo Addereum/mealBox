@@ -22,6 +22,12 @@ class Meal {
   
   @HiveField(5)
   final String? energyLevel;
+  
+  @HiveField(6)
+  final bool? tookMeds;
+  
+  @HiveField(7)
+  final String? imagePath;
 
   Meal({
     required this.id,
@@ -30,6 +36,8 @@ class Meal {
     required this.timeString,
     this.isLoggedLate = false,
     this.energyLevel,
+    this.tookMeds,
+    this.imagePath,
   });
 
 
@@ -41,6 +49,8 @@ class Meal {
       timeString: map['timeString'],
       isLoggedLate: map['isLoggedLate'] ?? false,
       energyLevel: map['energyLevel'],
+      tookMeds: map['tookMeds'],
+      imagePath: map['imagePath'],
     );
   }
 
@@ -52,13 +62,15 @@ class Meal {
       'timeString': timeString,
       'isLoggedLate': isLoggedLate,
       'energyLevel': energyLevel,
+      'tookMeds': tookMeds,
+      'imagePath': imagePath,
     };
   }
 
   String get dateKey => '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
   
   // Factory für nachgetragene Mahlzeiten
-  factory Meal.loggedLater(String mealType, DateTime actualTime, {String? energyLevel}) {
+  factory Meal.loggedLater(String mealType, DateTime actualTime, {String? energyLevel, bool? tookMeds, String? imagePath}) {
     final now = DateTime.now();
     return Meal(
       id: now.millisecondsSinceEpoch.toString(),
@@ -67,6 +79,8 @@ class Meal {
       timeString: DateFormat('HH:mm').format(actualTime),
       isLoggedLate: true,
       energyLevel: energyLevel,
+      tookMeds: tookMeds,
+      imagePath: imagePath,
     );
   }
 }

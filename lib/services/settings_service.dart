@@ -10,11 +10,13 @@ class SettingsService with ChangeNotifier {
   static const String _showStatsKey = 'showStats';
   static const String _safeFoodsKey = 'safeFoods';
   static const String _mealNamesKey = 'mealNames';
+  static const String _trackMedicationsKey = 'trackMedications';
 
   bool _simpleMode = false;
   bool _notifications = true;
   bool _showStats = true;
   ThemeMode _themeMode = ThemeMode.light;
+  bool _trackMedications = false;
   List<String> _safeFoods = [];
   List<String> _mealNames = ["Frühstück 🍳", "Mittagessen 🥗", "Abendessen 🍽️", "Snack 🍎"];
 
@@ -33,6 +35,7 @@ class SettingsService with ChangeNotifier {
   bool get notifications => _notifications;
   bool get showStats => _showStats;
   ThemeMode get themeMode => _themeMode;
+  bool get trackMedications => _trackMedications;
   List<String> get safeFoods => _safeFoods;
   List<String> get mealNames => _mealNames;
 
@@ -49,6 +52,7 @@ class SettingsService with ChangeNotifier {
     _simpleMode = box.get(_simpleModeKey, defaultValue: false);
     _notifications = box.get(_notificationsKey, defaultValue: true);
     _showStats = box.get(_showStatsKey, defaultValue: true);
+    _trackMedications = box.get(_trackMedicationsKey, defaultValue: false);
     _safeFoods = box.get(_safeFoodsKey, defaultValue: <String>[]).cast<String>();
     
     final defaultMeals = ["Frühstück 🍳", "Mittagessen 🥗", "Abendessen 🍽️", "Snack 🍎"];
@@ -78,6 +82,13 @@ class SettingsService with ChangeNotifier {
     final box = await _getBox();
     await box.put(_showStatsKey, value);
     _showStats = value;
+    notifyListeners();
+  }
+
+  Future<void> setTrackMedications(bool value) async {
+    final box = await _getBox();
+    await box.put(_trackMedicationsKey, value);
+    _trackMedications = value;
     notifyListeners();
   }
 

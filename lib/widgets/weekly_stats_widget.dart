@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../services/meal_service.dart';
+import '../models/meal.dart';
+import 'package:intl/intl.dart';
+import '../services/meal_service.dart';
 
 class WeeklyStatsWidget extends StatelessWidget {
   const WeeklyStatsWidget({Key? key}) : super(key: key);
@@ -14,19 +17,32 @@ class WeeklyStatsWidget extends StatelessWidget {
       return DateTime.now().subtract(Duration(days: 6 - index));
     });
 
-    return FutureBuilder<List<bool>>(
-      future: Future.wait(last7Days.map((d) => mealService.hasMealsForDate(d))),
+    return FutureBuilder<List<List<Meal>>>(
+      future: Future.wait(last7Days.map((d) => mealService.getMealsForDate(d))),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox.shrink(); // Verstecken bis geladen
         }
         
-        final hasMealsList = snapshot.data!;
+        final allDaysMeals = snapshot.data!;
         
         int currentStreak = 0;
+        int goodEnergyDays = 0;
+        int goodEatingDays = 0;
+        
         for (int i = 6; i >= 0; i--) {
-          if (hasMealsList[i]) {
+          final dayMeals = allDaysMeals[i];
+          final hasMeals = dayMeals.isNotEmpty;
+          
+          if (hasMeals) {
             currentStreak++;
+            if (dayMeals.length >= 3) {
+              goodEatingDays++;
+              // Check if any meal had High or Med energy
+              if (dayMeals.any((m) => m.energyLevel == '⚡ High' || m.energyLevel == '🔋 Med')) {
+                goodEnergyDays++;
+              }
+            }
           } else {
             break;
           }
@@ -80,7 +96,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: List.generate(7, (index) {
                     final date = last7Days[index];
-                    final hasMeals = hasMealsList[index];
+                    final hasMeals = allDaysMeals[index].isNotEmpty;
                     final isToday = index == 6; // letztes Element ist heute
                     
                     return Column(
@@ -112,6 +128,33 @@ class WeeklyStatsWidget extends StatelessWidget {
                     );
                   }),
                 ),
+                if (goodEatingDays >= 2 && goodEnergyDays >= 2) ...[
+                  SizedBox(height: 16),
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue[100]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.insights, color: Colors.blue[700], size: 20),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Gut gemacht! An Tagen mit 3+ Mahlzeiten ist deine Energie spürbar besser. 🚀',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.blue[900],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 // screens/home_screen.dart
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'safe_foods_screen.dart';
 import '../services/notification_service.dart';
-
+import 'package:confetti/confetti.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -27,10 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _simpleMode = false;
   bool _showStats = true;
   final ScrollController _scrollController = ScrollController();
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
     _loadSettings();
     _settingsService.addListener(_onSettingsChanged);
   }
@@ -39,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _settingsService.removeListener(_onSettingsChanged);
     _scrollController.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
   
@@ -73,6 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final mealService = Provider.of<MealService>(context, listen: false);
     await mealService.addMeal('Meal');
     
+    await _afterMealLogged(DateTime.now());
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Meal added ✅'),
@@ -83,6 +89,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _afterMealLogged(DateTime logTime) async {
+    final mealService = Provider.of<MealService>(context, listen: false);
+    
+    // Confetti Check (3 Mahlzeiten am Tag)
+    final todayMeals = await mealService.getMealsForDate(DateTime.now());
+    if (todayMeals.length == 3) {
+      _confettiController.play();
+    }
+    
+    // Smart Reminders Check
+    if (_settingsService.notifications) {
+      final hour = logTime.hour;
+      if (hour >= 5 && hour < 11) {
+        await NotificationService().cancelReminder(0); // Frühstück
+      } else if (hour >= 11 && hour < 16) {
+        await NotificationService().cancelReminder(1); // Mittagessen
+      } else if (hour >= 16 && hour < 23) {
+        await NotificationService().cancelReminder(2); // Abendessen
+      }
+    }
+  }
+
   void _navigateToSettings() {
     Navigator.push(
       context,
@@ -90,9 +118,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _logMeal(String mealType, DateTime? customTime, String? energyLevel) async {
+  Future<void> _logMeal(String mealType, DateTime? customTime, String? energyLevel, bool? tookMeds, String? imagePath) async {
     final mealService = Provider.of<MealService>(context, listen: false);
-    await mealService.addMeal(mealType, customTime: customTime, energyLevel: energyLevel);
+    await mealService.addMeal(mealType, customTime: customTime, energyLevel: energyLevel, tookMeds: tookMeds, imagePath: imagePath);
+    
+    await _afterMealLogged(customTime ?? DateTime.now());
     
     String message = '$mealType added ✅';
     if (energyLevel != null) {
@@ -100,6 +130,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (customTime != null) {
       message += ' (logged at ${DateFormat('HH:mm').format(customTime)})';
+    }
+    if (tookMeds == true) {
+      message += ' 💊';
+    }
+    if (imagePath != null) {
+      message += ' 📸';
     }
     
     ScaffoldMessenger.of(context).showSnackBar(
@@ -136,6 +172,43 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => MealDialog(onMealSelected: _logMeal),
       );
     }
+  }
+
+  void _logSimpleMealInternal() {
+    _logMeal('Mahlzeit', null, null, null, null);
+  }
+
+  void _triggerSOS() {
+    final safeFoods = _settingsService.safeFoods;
+    String suggestion;
+    if (safeFoods.isNotEmpty) {
+      final random = Random();
+      suggestion = safeFoods[random.nextInt(safeFoods.length)];
+    } else {
+      suggestion = "Trink ein Glas Wasser, iss einen Löffel Erdnussbutter oder beiß in einen Apfel. Hauptsache etwas!";
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('SOS 🆘', style: TextStyle(color: Colors.red)),
+        content: Text('Gar keine Energie? Versuch doch mal das hier:\n\n$suggestion'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Abbrechen', style: TextStyle(color: Colors.grey)),
+          ),
+          if (safeFoods.isNotEmpty)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _logMeal(suggestion, null, '🪫 Low', null, null);
+              },
+              child: Text('Jetzt loggen!', style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
+            ),
+        ],
+      ),
+    );
   }
 
   void _navigateToHistory() {
@@ -212,8 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              body: SingleChildScrollView(
-                controller: _scrollController,
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    controller: _scrollController,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height,
@@ -350,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.grey[700],
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
                               ),
                               SizedBox(height: 16),
@@ -377,6 +452,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                               ),
+                              SizedBox(height: 12),
+                              TextButton.icon(
+                                onPressed: _triggerSOS,
+                                icon: Icon(Icons.sos, color: Colors.red),
+                                label: Text(
+                                  'Gar keine Energie?',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -389,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.teal,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         
@@ -412,7 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Noch keine Mahlzeiten heute',
                                           style: TextStyle(
                                             fontSize: 16,
-                                            color: Colors.grey[600],
+                                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
@@ -421,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Drücke auf Hinzufügen, um zu beginnen!',
                                           style: TextStyle(
                                             fontSize: 14,
-                                            color: Colors.grey[500],
+                                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
@@ -443,7 +531,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              floatingActionButton: FloatingActionButton(
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  shouldLoop: false,
+                  colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple],
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
                 onPressed: _showMealDialog,
                 backgroundColor: Colors.teal,
                 child: Icon(_simpleMode ? Icons.check : Icons.add),
