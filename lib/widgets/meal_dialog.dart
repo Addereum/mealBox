@@ -102,7 +102,7 @@ class _MealDialogState extends State<MealDialog> {
       child: Container(
         constraints: BoxConstraints(maxWidth: 400),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -112,9 +112,10 @@ class _MealDialogState extends State<MealDialog> {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             // Header
             Container(
               padding: EdgeInsets.all(20),
@@ -151,7 +152,7 @@ class _MealDialogState extends State<MealDialog> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey[700],
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       Spacer(),
@@ -239,7 +240,7 @@ class _MealDialogState extends State<MealDialog> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey[700],
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: 12),
@@ -267,7 +268,7 @@ class _MealDialogState extends State<MealDialog> {
                     SizedBox(width: 10),
                     Text(
                       'Medikamente genommen?',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface),
                     ),
                     Spacer(),
                     Switch(
@@ -291,7 +292,7 @@ class _MealDialogState extends State<MealDialog> {
                   SizedBox(width: 10),
                   Text(
                     'Foto hinzufügen',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface),
                   ),
                   Spacer(),
                   if (_imagePath != null)
@@ -369,6 +370,7 @@ class _MealDialogState extends State<MealDialog> {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -388,7 +390,7 @@ class _MealDialogState extends State<MealDialog> {
         color: isSelected ? color[300]! : Colors.grey[300]!,
       ),
       labelStyle: TextStyle(
-        color: isSelected ? color[900] : Colors.grey[700],
+        color: isSelected ? color[900] : Colors.black87,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
     );
@@ -411,13 +413,16 @@ class _MealDialogState extends State<MealDialog> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ),
