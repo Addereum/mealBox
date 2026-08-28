@@ -50,15 +50,14 @@ class MealBoxApp extends StatelessWidget {
                   backgroundColor: lightColorScheme.surface,
                   foregroundColor: lightColorScheme.onSurface,
                 ),
-                cardTheme: CardTheme(
+                cardTheme: const CardThemeData(
                   elevation: 0, // No default shadow
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    side: BorderSide(color: lightColorScheme.outlineVariant, width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
                   ),
                 ),
-                dialogTheme: DialogTheme(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                dialogTheme: const DialogThemeData(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(28))),
                 ),
               ),
               darkTheme: ThemeData(
@@ -72,17 +71,16 @@ class MealBoxApp extends StatelessWidget {
                   backgroundColor: const Color(0xFF121212),
                   foregroundColor: darkColorScheme.onSurface,
                 ),
-                cardTheme: CardTheme(
+                cardTheme: const CardThemeData(
                   elevation: 0, // Tinted shadows will be applied manually if needed
-                  color: const Color(0xFF1E1E1E),
+                  color: Color(0xFF1E1E1E),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    side: const BorderSide(color: Color(0xFF2C2C2C), width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
                   ),
                 ),
-                dialogTheme: DialogTheme(
-                  backgroundColor: const Color(0xFF1E1E1E),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                dialogTheme: const DialogThemeData(
+                  backgroundColor: Color(0xFF1E1E1E),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(28))),
                 ),
               ),
               themeMode: settings.themeMode,
