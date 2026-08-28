@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import '../services/settings_service.dart';
 
 class MealDialog extends StatefulWidget {
-  final Function(String, DateTime?, String?) onMealSelected;
+  final Function(String, DateTime?, String?, bool?, String?) onMealSelected;
 
   const MealDialog({Key? key, required this.onMealSelected}) : super(key: key);
 
@@ -16,7 +19,11 @@ class _MealDialogState extends State<MealDialog> {
   bool _showTimePicker = false;
   TimeOfDay _selectedTime = TimeOfDay.now();
   String? _selectedEnergy;
+  bool _tookMeds = false;
+  String? _imagePath;
+  bool _isTakingPicture = false;
   final SettingsService _settingsService = SettingsService.instance;
+  final ImagePicker _picker = ImagePicker();
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -49,8 +56,38 @@ class _MealDialogState extends State<MealDialog> {
     }
   }
 
+  Future<void> _takePicture() async {
+    setState(() => _isTakingPicture = true);
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 80,
+      );
+      if (photo != null) {
+        final directory = await getApplicationDocumentsDirectory();
+        final fileName = 'meal_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final savedImage = await File(photo.path).copy('${directory.path}/$fileName');
+        setState(() {
+          _imagePath = savedImage.path;
+        });
+      }
+    } catch (e) {
+      print('Fehler beim Foto aufnehmen: $e');
+    } finally {
+      setState(() => _isTakingPicture = false);
+    }
+  }
+
   void _logMeal(String mealType) {
-    widget.onMealSelected(mealType, _customTime, _selectedEnergy);
+    widget.onMealSelected(
+      mealType, 
+      _customTime, 
+      _selectedEnergy, 
+      _settingsService.trackMedications ? _tookMeds : null, 
+      _imagePath
+    );
     Navigator.pop(context);
   }
 
@@ -216,6 +253,76 @@ class _MealDialogState extends State<MealDialog> {
                       _buildEnergyButton('⚡ High', Colors.green),
                     ],
                   ),
+                ],
+              ),
+            ),
+
+            if (_settingsService.trackMedications) ...[
+              Divider(height: 1),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
+                  children: [
+                    Icon(Icons.medication, color: Colors.red[400]),
+                    SizedBox(width: 10),
+                    Text(
+                      'Medikamente genommen?',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    Spacer(),
+                    Switch(
+                      value: _tookMeds,
+                      onChanged: (val) => setState(() => _tookMeds = val),
+                      activeColor: Colors.red[400],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            
+            Divider(height: 1),
+            
+            // Foto Button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                children: [
+                  Icon(Icons.camera_alt, color: Colors.blue),
+                  SizedBox(width: 10),
+                  Text(
+                    'Foto hinzufügen',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                  Spacer(),
+                  if (_imagePath != null)
+                    Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            File(_imagePath!),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => setState(() => _imagePath = null),
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                            child: Icon(Icons.close, size: 16, color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    IconButton(
+                      icon: _isTakingPicture 
+                          ? SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                          : Icon(Icons.add_a_photo, color: Colors.blue),
+                      onPressed: _isTakingPicture ? null : _takePicture,
+                    ),
                 ],
               ),
             ),

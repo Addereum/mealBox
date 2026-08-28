@@ -23,13 +23,15 @@ class MealAdapter extends TypeAdapter<Meal> {
       timeString: fields[3] as String,
       isLoggedLate: fields[4] as bool,
       energyLevel: fields[5] as String?,
+      tookMeds: fields[6] as bool?,
+      imagePath: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Meal obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +43,11 @@ class MealAdapter extends TypeAdapter<Meal> {
       ..writeByte(4)
       ..write(obj.isLoggedLate)
       ..writeByte(5)
-      ..write(obj.energyLevel);
+      ..write(obj.energyLevel)
+      ..writeByte(6)
+      ..write(obj.tookMeds)
+      ..writeByte(7)
+      ..write(obj.imagePath);
   }
 
   @override

@@ -61,14 +61,14 @@ class MealService with ChangeNotifier {
     return _box!;
   }
 
-  Future<void> addMeal(String mealType, {DateTime? customTime, String? energyLevel}) async {
+  Future<void> addMeal(String mealType, {DateTime? customTime, String? energyLevel, bool? tookMeds, String? imagePath}) async {
     final box = await _getBox();
     final now = DateTime.now();
     
     Meal meal;
     
     if (customTime != null) {
-      meal = Meal.loggedLater(mealType, customTime, energyLevel: energyLevel);
+      meal = Meal.loggedLater(mealType, customTime, energyLevel: energyLevel, tookMeds: tookMeds, imagePath: imagePath);
     } else {
       meal = Meal(
         id: now.millisecondsSinceEpoch.toString(),
@@ -76,6 +76,8 @@ class MealService with ChangeNotifier {
         dateTime: now,
         timeString: DateFormat('HH:mm').format(now),
         energyLevel: energyLevel,
+        tookMeds: tookMeds,
+        imagePath: imagePath,
       );
     }
 

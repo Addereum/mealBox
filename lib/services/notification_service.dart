@@ -143,6 +143,30 @@ class NotificationService {
     return scheduledDate;
   }
 
+  Future<void> testNotification() async {
+    if (kIsWeb) return;
+    await flutterLocalNotificationsPlugin.show(
+      99,
+      'Test Benachrichtigung 🚀',
+      'Wenn du das siehst, funktionieren die Benachrichtigungen!',
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'mealbox_test',
+          'Test Benachrichtigungen',
+          channelDescription: 'Wird zum Testen der Benachrichtigungen verwendet',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+    );
+  }
+
+  Future<void> cancelReminder(int id) async {
+    if (kIsWeb) return;
+    await flutterLocalNotificationsPlugin.cancel(id);
+    debugPrint('Abgebrochene Erinnerung mit ID: $id');
+  }
+
   Future<void> cancelAllNotifications() async {
     if (kIsWeb) return;
     await flutterLocalNotificationsPlugin.cancelAll();
