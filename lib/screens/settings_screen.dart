@@ -38,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _isExporting = false;
   bool _isImporting = false;
   String _appVersion = '1.0.0';
-
+  static const String _appCodename = 'Dopamine Donut';
   @override
   void initState() {
     super.initState();
@@ -84,7 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _notifications = _settingsService.notifications;
       _showStats = _settingsService.showStats;
       _trackMedications = _settingsService.trackMedications;
-      _appVersion = packageInfo.version;
+      _appVersion = '${packageInfo.version} "$_appCodename"';
     });
   }
 
