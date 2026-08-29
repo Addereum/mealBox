@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import '../services/settings_service.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class MealDialog extends StatefulWidget {
   final Function(String, DateTime?, String?, bool?, String?) onMealSelected;
@@ -128,7 +129,7 @@ class _MealDialogState extends State<MealDialog> {
               ),
               child: Center(
                 child: Text(
-                  'Was hast du gegessen? 🍽️',
+                  AppLocalizations.of(context)!.whatDidYouEat,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -148,7 +149,7 @@ class _MealDialogState extends State<MealDialog> {
                       Icon(Icons.access_time, color: Colors.teal, size: 20),
                       SizedBox(width: 10),
                       Text(
-                        'Zeitpunkt:',
+                        '${AppLocalizations.of(context)!.time}:',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -184,7 +185,7 @@ class _MealDialogState extends State<MealDialog> {
                             label: Text(
                               _customTime != null
                                   ? DateFormat('HH:mm').format(_customTime!)
-                                  : 'Zeit auswählen',
+                                  : AppLocalizations.of(context)!.selectTime,
                               style: TextStyle(fontSize: 16),
                             ),
                             style: ElevatedButton.styleFrom(
@@ -206,15 +207,15 @@ class _MealDialogState extends State<MealDialog> {
                             });
                           },
                           icon: Icon(Icons.refresh, color: Colors.grey),
-                          tooltip: 'Auf jetzt zurücksetzen',
+                          tooltip: AppLocalizations.of(context)!.resetToNow,
                         ),
                       ],
                     ),
                     SizedBox(height: 10),
                     Text(
                       _customTime != null
-                          ? 'Wird als nachgetragene Mahlzeit gespeichert'
-                          : 'Ohne Auswahl wird die aktuelle Zeit verwendet',
+                          ? AppLocalizations.of(context)!.loggedLateHint
+                          : AppLocalizations.of(context)!.currentTimeHint,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -236,7 +237,7 @@ class _MealDialogState extends State<MealDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Energie-Level (optional):',
+                    AppLocalizations.of(context)!.energyLevelOpt,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -270,7 +271,7 @@ class _MealDialogState extends State<MealDialog> {
                         Icon(Icons.medication, color: Colors.red[400]),
                         SizedBox(width: 8),
                         Text(
-                          'Medikamente genommen?',
+                          AppLocalizations.of(context)!.tookMeds,
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface),
                         ),
                       ],
@@ -296,7 +297,7 @@ class _MealDialogState extends State<MealDialog> {
                   Icon(Icons.camera_alt, color: Colors.blue),
                   SizedBox(width: 10),
                   Text(
-                    'Foto hinzufügen',
+                    AppLocalizations.of(context)!.addPhoto,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface),
                   ),
                   Spacer(),
@@ -347,7 +348,7 @@ class _MealDialogState extends State<MealDialog> {
                 crossAxisSpacing: 15,
                 children: List.generate(4, (index) {
                   final colors = [Colors.orange[100]!, Colors.green[100]!, Colors.blue[100]!, Colors.red[100]!];
-                  final label = _settingsService.mealNames.length > index ? _settingsService.mealNames[index] : 'Mahlzeit ${index + 1}';
+                  final label = _settingsService.mealNames.length > index ? _settingsService.mealNames[index] : AppLocalizations.of(context)!.mealNumber(index + 1);
                   return _buildMealOption(label, colors[index]);
                 }),
               ),
@@ -368,7 +369,7 @@ class _MealDialogState extends State<MealDialog> {
                       side: BorderSide(color: Colors.grey[300]!),
                     ),
                   ),
-                  child: Text('Abbrechen'),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
               ),
             ),

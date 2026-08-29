@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/foundation.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -73,15 +74,15 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleMealReminders() async {
+  Future<void> scheduleMealReminders(AppLocalizations l10n) async {
     if (kIsWeb) return;
     await cancelAllNotifications(); // Clear existing ones first
 
     // Breakfast Reminder at 9:00 AM
     await _scheduleDailyReminder(
       id: 0,
-      title: 'Frühstückszeit! 🍳',
-      body: 'Hast du heute schon gefrühstückt? Logge deine Mahlzeit.',
+      title: l10n.breakfastReminderTitle,
+      body: l10n.breakfastReminderBody,
       hour: 9,
       minute: 0,
     );
@@ -89,8 +90,8 @@ class NotificationService {
     // Lunch Reminder at 1:00 PM
     await _scheduleDailyReminder(
       id: 1,
-      title: 'Mittagessen! 🥗',
-      body: 'Vergiss nicht dein Mittagessen zu loggen.',
+      title: l10n.lunchReminderTitle,
+      body: l10n.lunchReminderBody,
       hour: 13,
       minute: 0,
     );
@@ -98,8 +99,8 @@ class NotificationService {
     // Dinner Reminder at 7:00 PM
     await _scheduleDailyReminder(
       id: 2,
-      title: 'Abendessen! 🍽️',
-      body: 'Zeit für dein Abendessen. Denk ans Loggen!',
+      title: l10n.dinnerReminderTitle,
+      body: l10n.dinnerReminderBody,
       hour: 19,
       minute: 0,
     );
@@ -143,12 +144,12 @@ class NotificationService {
     return scheduledDate;
   }
 
-  Future<void> testNotification() async {
+  Future<void> testNotification(AppLocalizations l10n) async {
     if (kIsWeb) return;
     await flutterLocalNotificationsPlugin.show(
       99,
-      'Test Benachrichtigung 🚀',
-      'Wenn du das siehst, funktionieren die Benachrichtigungen!',
+      l10n.testNotificationTitle,
+      l10n.testNotificationBody,
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'mealbox_test',

@@ -1,0 +1,210 @@
+{
+  "@@locale": "en",
+  "appTitle": "MealBox 🍱",
+  "breakfast": "Breakfast",
+  "lunch": "Lunch",
+  "dinner": "Dinner",
+  "snack": "Snack",
+  "meal": "Meal",
+  "addMeal": "Add",
+  "addMealTitle": "Add Meal",
+  "history": "History",
+  "settings": "Settings",
+  "safeFoods": "Safe Foods",
+  "safeFoodsDesc": "Add foods that you can always eat when nothing else works.",
+  "therapyExport": "Therapy Export",
+  "exportPdf": "Export as PDF",
+  "exportCsv": "Export as CSV",
+  "exportSuccess": "✅ Data exported successfully",
+  "noEnergy": "No energy at all?",
+  "sosTitle": "SOS 🆘",
+  "sosMessageFallback": "Drink a glass of water, eat a spoonful of peanut butter, or take a bite of an apple. Just something!",
+  "sosMessagePrefix": "No energy at all? Try this:\n\n",
+  "cancel": "Cancel",
+  "logNow": "Log now!",
+  "delete": "Delete",
+  "deleteConfirmTitle": "Confirm deletion",
+  "deleteConfirmMessage": "Do you really want to delete {mealType} from {time}?",
+  "@deleteConfirmMessage": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayEaten": "Eaten today: {count} {count, plural, =1{meal} other{meals}}",
+  "@todayEaten": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "water": "Water: {count} glass",
+  "@water": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyStats": "Weekly Stats",
+  "streakDays": "{count} days",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsEncouragement": "Great job! On days with 3+ meals, your energy is noticeably better. 🚀",
+  "energyHigh": "⚡ High",
+  "energyMed": "🔋 Med",
+  "energyLow": "🪫 Low",
+  "tookMeds": "Took medication?",
+  "loggedLate": "Logged late",
+  "timeAt": "at {time}",
+  "@timeAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "noMealsToday": "No meals today yet",
+  "pressAddToStart": "Press Add to get started!",
+  "breakfastReminderTitle": "Breakfast time! 🍳",
+  "breakfastReminderBody": "Have you had breakfast yet? Log your meal.",
+  "lunchReminderTitle": "Lunch time! 🥗",
+  "lunchReminderBody": "Don't forget to log your lunch.",
+  "dinnerReminderTitle": "Dinner time! 🍽️",
+  "dinnerReminderBody": "Time for dinner. Remember to log!",
+  "testNotificationTitle": "Test notification 🚀",
+  "testNotificationBody": "If you see this, notifications are working!",
+  "noMealsDesc": "Tap add to start tracking your day.",
+  "simpleMode": "Simple",
+  "mealAdded": "{mealType} added ✅",
+  "@mealAdded": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
+  "themeMode": "Appearance",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "notifications": "Notifications",
+  "reminders": "Reminders (Breakfast, Lunch, Dinner)",
+  "simpleModeDesc": "Simple mode (Skip time/energy prompts)",
+  "showStats": "Show weekly stats on home screen",
+  "addSafeFood": "Add Safe Food",
+  "newSafeFood": "New Safe Food",
+  "save": "Save",
+  "deleteData": "Delete all data",
+  "deleteDataWarning": "This deletes all your logged meals. This cannot be undone.",
+  "dataDeleted": "All data has been deleted",
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "todayMealsTitle": "Today's Meals",
+  "exportFailed": "❌ Export failed: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "importDataConfirmTitle": "Import data?",
+  "importDataConfirmDesc": "This will replace ALL existing meals.\nAre you sure you want to continue?",
+  "importBtn": "Import",
+  "importSuccess": "✅ Data imported successfully",
+  "importFailed": "❌ Import failed: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "clearDataConfirmTitle": "Clear all data?",
+  "clearDataConfirmDesc": "This action deletes ALL saved meals and cannot be undone.\n\nAre you sure you want to continue?",
+  "clearDataBtn": "Clear",
+  "clearDataSuccess": "✅ All data has been cleared",
+  "clearDataFailed": "❌ Error clearing data: {error}",
+  "@clearDataFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "simpleModeDescSub": "Just one button, no options",
+  "renameMeals": "Rename meals",
+  "renameMealsDesc": "Set custom names and emojis for buttons",
+  "remindersDesc": "Enable gentle reminders",
+  "testNotification": "Test notification",
+  "testNotificationDesc": "Send an immediate test message",
+  "testNotificationSent": "Test notification sent!",
+  "medicationTracker": "Medication Tracker",
+  "medicationTrackerDesc": "Ask for medications when logging a meal",
+  "weeklyStatsDesc": "Show streak overview on home screen",
+  "exportPdfDesc": "Diary for doctor/therapist",
+  "exportCsvName": "Export as CSV (Excel)",
+  "exportCsvDesc": "Raw data as table",
+  "dataManagement": "Data management",
+  "exportData": "Export data",
+  "exportDataDesc": "Create a JSON backup",
+  "importData": "Import data",
+  "importDataDesc": "Restore from backup file",
+  "clearDataWarn": "Warning: This action cannot be undone",
+  "darkModeDesc": "Enable dark theme",
+  "privacy": "Privacy",
+  "privacyDesc": "All data is stored locally",
+  "privacyDialogText": "All data is stored locally on your device. No information is sent to a server.\n\nBackups are only created with your explicit consent.",
+  "ok": "OK",
+  "developer": "Developer",
+  "githubRepo": "GitHub Repository",
+  "githubRepoDesc": "View source code & contribute",
+  "devWebsite": "Developer Website",
+  "devWebsiteDesc": "Learn more about the author",
+  "linkError": "Could not open link",
+  "aboutApp": "About MealBox",
+  "historyTitle": "Meal History 📅",
+  "mealDeleted": "Meal deleted",
+  "noMealsOnDay": "No meals on this day",
+  "totalMeals": "Total: {count} {count, plural, =1{meal} other{meals}}",
+  "@totalMeals": { "placeholders": { "count": { "type": "int" } } },
+  "safeFoodsTitle": "Safe Foods 🛟",
+  "noSafeFoods": "No safe foods added yet.",
+  "safeFoodName": "Food name",
+  "safeFoodAction": "What do you want to do?",
+  "logFood": "Log (Low Energy)",
+  "time": "Time",
+  "energyLevelText": "Energy Level",
+  "unknown": "Unknown",
+  "weekPrefix": "Week of",
+  "whatDidYouEat": "What did you eat? 🍽️",
+  "selectTime": "Select time",
+  "resetToNow": "Reset to now",
+  "loggedLateHint": "Will be saved as logged late",
+  "currentTimeHint": "Without selection, current time is used",
+  "energyLevelOpt": "Energy level (optional):",
+  "addPhoto": "Add photo",
+  "mealNumber": "Meal {number}",
+  "@mealNumber": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  }
+}

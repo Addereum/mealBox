@@ -1,0 +1,3 @@
+- Vollständige Lokalisierung (i18n): Englisch und Deutsch nativ.
+- Anti-Slop Redesign: Neues modernes, sauberes und reizarmes Design (Squircles).
+- Therapie-Export: Exportiere deine Mahlzeiten-Logs als PDF und CSV für Therapeuten.

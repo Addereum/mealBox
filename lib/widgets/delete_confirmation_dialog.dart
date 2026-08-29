@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final String mealType;
@@ -13,16 +14,16 @@ class DeleteConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Mahlzeit löschen?'),
-      content: Text('Soll "$mealType" um $time Uhr wirklich gelöscht werden?'),
+      title: Text(AppLocalizations.of(context)!.deleteConfirmTitle),
+      content: Text(AppLocalizations.of(context)!.deleteConfirmMessage(mealType, time)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: Text('Abbrechen', style: TextStyle(color: Colors.grey)),
+          child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Colors.grey)),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
-          child: Text('Löschen', style: TextStyle(color: Colors.red)),
+          child: Text(AppLocalizations.of(context)!.delete, style: TextStyle(color: Colors.red)),
         ),
       ],
     );

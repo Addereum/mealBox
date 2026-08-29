@@ -15,6 +15,7 @@ import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'safe_foods_screen.dart';
 import '../services/notification_service.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 import 'package:confetti/confetti.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Beim App-Start die Benachrichtigungsberechtigung (Android 13+) abfragen
     if (_settingsService.notifications) {
       await NotificationService().requestPermissions();
-      await NotificationService().scheduleMealReminders();
+      await NotificationService().scheduleMealReminders(AppLocalizations.of(context)!);
     }
   }
 
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Meal added ✅'),
+        content: Text(AppLocalizations.of(context)!.mealAdded('Meal')),
         backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     await _afterMealLogged(customTime ?? DateTime.now());
     
-    String message = '$mealType added ✅';
+    String message = AppLocalizations.of(context)!.mealAdded(mealType);
     if (energyLevel != null) {
       message += ' ($energyLevel)';
     }
@@ -176,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _logSimpleMealInternal() {
-    _logMeal('Mahlzeit', null, null, null, null);
+    _logMeal(AppLocalizations.of(context)!.meal, null, null, null, null);
   }
 
   void _triggerSOS() {
@@ -186,26 +187,26 @@ class _HomeScreenState extends State<HomeScreen> {
       final random = Random();
       suggestion = safeFoods[random.nextInt(safeFoods.length)];
     } else {
-      suggestion = "Trink ein Glas Wasser, iss einen Löffel Erdnussbutter oder beiß in einen Apfel. Hauptsache etwas!";
+      suggestion = AppLocalizations.of(context)!.sosMessageFallback;
     }
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('SOS 🆘', style: TextStyle(color: Colors.red)),
-        content: Text('Gar keine Energie? Versuch doch mal das hier:\n\n$suggestion'),
+        title: Text(AppLocalizations.of(context)!.sosTitle, style: TextStyle(color: Colors.red)),
+        content: Text(AppLocalizations.of(context)!.sosMessagePrefix + suggestion),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Abbrechen', style: TextStyle(color: Colors.grey)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Colors.grey)),
           ),
           if (safeFoods.isNotEmpty)
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                _logMeal(suggestion, null, '🪫 Low', null, null);
+                _logMeal(suggestion, null, AppLocalizations.of(context)!.energyLow, null, null);
               },
-              child: Text('Jetzt loggen!', style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)!.logNow, style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
             ),
         ],
       ),
@@ -238,11 +239,11 @@ class _HomeScreenState extends State<HomeScreen> {
             
             return Scaffold(
               appBar: AppBar(
-                title: Text('MealBox 🍱'),
+                title: Text(AppLocalizations.of(context)!.appTitle),
                 actions: [
                   IconButton(
                     icon: Text('🛟', style: TextStyle(fontSize: 20)),
-                    tooltip: 'Safe Foods',
+                    tooltip: AppLocalizations.of(context)!.safeFoods,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -267,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Icon(Icons.history, color: Colors.teal),
                               SizedBox(width: 10),
-                              Text('Historie'),
+                              Text(AppLocalizations.of(context)!.history),
                             ],
                           ),
                         ),
@@ -277,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Icon(Icons.settings, color: Colors.teal),
                               SizedBox(width: 10),
-                              Text('Einstellungen'),
+                              Text(AppLocalizations.of(context)!.settings),
                             ],
                           ),
                         ),
@@ -318,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            DateFormat('EEEE, dd.MM.yyyy').format(DateTime.now()),
+                                            DateFormat('EEEE, dd.MM.yyyy', Localizations.localeOf(context).languageCode).format(DateTime.now()),
                                             style: TextStyle(
                                               fontSize: 18,
                                               color: Colors.white,
@@ -327,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           SizedBox(height: 8),
                                           Text(
-                                            'Heute gegessen: ${todayMeals.length} Mahlzeit${todayMeals.length != 1 ? 'en' : ''}',
+                                            AppLocalizations.of(context)!.todayEaten(todayMeals.length),
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.white.withOpacity(0.9),
@@ -348,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Icon(Icons.flash_on, size: 14, color: Colors.white),
                                             SizedBox(width: 4),
                                             Text(
-                                              'Simple',
+                                              AppLocalizations.of(context)!.simpleMode,
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: Colors.white,
@@ -384,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Icon(Icons.water_drop, color: Colors.blue[400]),
                                   SizedBox(width: 8),
                                   Text(
-                                    'Wasser: $amount Glas',
+                                    AppLocalizations.of(context)!.water(amount),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -422,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             children: [
                               Text(
-                                'Mahlzeit hinzufügen',
+                                AppLocalizations.of(context)!.addMealTitle,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
@@ -451,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Icon(Icons.add, size: 24, color: Theme.of(context).colorScheme.onPrimary),
                                       SizedBox(width: 8),
                                       Text(
-                                        'Hinzufügen',
+                                        AppLocalizations.of(context)!.addMeal,
                                         style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -473,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Icon(Icons.sos, color: Colors.red),
                                       SizedBox(width: 8),
                                       Text(
-                                        'Gar keine Energie?',
+                                        AppLocalizations.of(context)!.noEnergy,
                                         style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                                       ),
                                     ],
@@ -488,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         
                         // Today's Meals
                         Text(
-                          'Heutige Mahlzeiten',
+                          AppLocalizations.of(context)!.todayMealsTitle,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -512,7 +513,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         SizedBox(height: 16),
                                         Text(
-                                          'Noch keine Mahlzeiten heute',
+                                          AppLocalizations.of(context)!.noMealsToday,
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -521,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         SizedBox(height: 8),
                                         Text(
-                                          'Drücke auf Hinzufügen, um zu beginnen!',
+                                          AppLocalizations.of(context)!.pressAddToStart,
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,

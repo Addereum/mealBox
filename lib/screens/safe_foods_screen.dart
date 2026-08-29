@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/settings_service.dart';
 import '../services/meal_service.dart';
 import 'package:provider/provider.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class SafeFoodsScreen extends StatefulWidget {
   const SafeFoodsScreen({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
     await mealService.addMeal(food); // Direkt als Namen speichern
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$food geloggt ✅'),
+        content: Text(AppLocalizations.of(context)!.mealAdded(food)),
         backgroundColor: Colors.teal,
         behavior: SnackBarBehavior.floating,
       ),
@@ -49,7 +50,7 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Safe Foods 🛟'),
+        title: Text(AppLocalizations.of(context)!.safeFoodsTitle),
         backgroundColor: Colors.blue,
       ),
       body: AnimatedBuilder(
@@ -68,7 +69,7 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Was geht immer, wenn die Energie fehlt? Speichere hier deine sicheren Optionen. Tippe auf ein Gericht, um es direkt zu loggen.',
+                        AppLocalizations.of(context)!.safeFoodsDesc,
                         style: TextStyle(color: Colors.blue[900], fontSize: 13),
                       ),
                     ),
@@ -84,7 +85,7 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
                             Icon(Icons.fastfood_outlined, size: 64, color: Colors.grey[300]),
                             SizedBox(height: 16),
                             Text(
-                              'Noch keine Safe Foods eingetragen.\nTippe auf das + um anzufangen!',
+                              AppLocalizations.of(context)!.noSafeFoods,
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.grey[600]),
                             ),

@@ -1,0 +1,3 @@
+- Full Localization (i18n): English and German native support.
+- Anti-Slop Redesign: New modern, clean, and low-stimulus design (squircles).
+- Therapy Export: Export meal logs as PDF and CSV for therapists.

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../services/meal_service.dart';
 import '../models/meal.dart';
-import 'package:intl/intl.dart';
 import '../services/meal_service.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class WeeklyStatsWidget extends StatelessWidget {
   const WeeklyStatsWidget({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Wochen-Statistik',
+                      AppLocalizations.of(context)!.weeklyStats,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                             Icon(Icons.local_fire_department, size: 14, color: Colors.orange[800]),
                             SizedBox(width: 4),
                             Text(
-                              '$currentStreak Tage',
+                              AppLocalizations.of(context)!.streakDays(currentStreak),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.orange[800],
@@ -101,7 +101,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                     return Column(
                       children: [
                         Text(
-                          DateFormat('E', 'de_DE').format(date).substring(0, 2),
+                          DateFormat('E', Localizations.localeOf(context).languageCode).format(date).substring(0, 2),
                           style: TextStyle(
                             fontSize: 12,
                             color: isToday ? Theme.of(context).colorScheme.primary : Colors.grey[600],
@@ -142,7 +142,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'Gut gemacht! An Tagen mit 3+ Mahlzeiten ist deine Energie spürbar besser. 🚀',
+                            AppLocalizations.of(context)!.statsEncouragement,
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.blue[900],

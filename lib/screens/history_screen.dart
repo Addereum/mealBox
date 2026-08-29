@@ -5,6 +5,7 @@ import '../models/meal.dart';
 import '../services/meal_service.dart';
 import '../widgets/meal_list_tile.dart';
 import '../widgets/delete_confirmation_dialog.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -48,16 +49,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
       // Daten automatisch neu laden nach Löschung
       _loadMeals();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mahlzeit gelöscht')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.mealDeleted)),
       );
     }
   }
 
-  String _formatDateKey(String dateKey) {
+  String _formatDateKey(String dateKey, BuildContext context) {
     try {
       final parts = dateKey.split('-');
       final date = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
-      return DateFormat('EEEE, dd.MM.yyyy', 'de_DE').format(date);
+      return DateFormat('EEEE, dd.MM.yyyy', Localizations.localeOf(context).languageCode).format(date);
     } catch (e) {
       return dateKey;
     }
@@ -69,7 +70,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       builder: (context, mealService, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Mahlzeiten-Historie 📅'),
+            title: Text(AppLocalizations.of(context)!.historyTitle),
             centerTitle: true,
           ),
           body: _isLoading
@@ -82,11 +83,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           Icon(Icons.history, size: 60, color: Colors.grey[400]),
                           SizedBox(height: 20),
                           Text(
-                            'Keine Mahlzeiten vorhanden',
+                            AppLocalizations.of(context)!.noMealsOnDay,
                             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                           ),
                           Text(
-                            'Beginne mit dem Loggen auf der Startseite!',
+                            AppLocalizations.of(context)!.noMealsDesc,
                             style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                           ),
                         ],
@@ -106,7 +107,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
                                 child: Text(
-                                  _formatDateKey(dateKey),
+                                  _formatDateKey(dateKey, context),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

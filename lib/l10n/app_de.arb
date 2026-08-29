@@ -1,0 +1,210 @@
+{
+  "@@locale": "de",
+  "appTitle": "MealBox 🍱",
+  "breakfast": "Frühstück",
+  "lunch": "Mittagessen",
+  "dinner": "Abendessen",
+  "snack": "Snack",
+  "meal": "Mahlzeit",
+  "addMeal": "Hinzufügen",
+  "addMealTitle": "Mahlzeit hinzufügen",
+  "history": "Historie",
+  "settings": "Einstellungen",
+  "safeFoods": "Safe Foods",
+  "safeFoodsDesc": "Füge Lebensmittel hinzu, die du immer essen kannst, wenn gar nichts anderes geht.",
+  "therapyExport": "Therapie-Export",
+  "exportPdf": "Als PDF exportieren",
+  "exportCsv": "Als CSV exportieren",
+  "exportSuccess": "✅ Daten erfolgreich exportiert",
+  "noEnergy": "Gar keine Energie?",
+  "sosTitle": "SOS 🆘",
+  "sosMessageFallback": "Trink ein Glas Wasser, iss einen Löffel Erdnussbutter oder beiß in einen Apfel. Hauptsache etwas!",
+  "sosMessagePrefix": "Gar keine Energie? Versuch doch mal das hier:\n\n",
+  "cancel": "Abbrechen",
+  "logNow": "Jetzt loggen!",
+  "delete": "Löschen",
+  "deleteConfirmTitle": "Löschen bestätigen",
+  "deleteConfirmMessage": "Möchtest du {mealType} von {time} wirklich löschen?",
+  "@deleteConfirmMessage": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayEaten": "Heute gegessen: {count} {count, plural, =1{Mahlzeit} other{Mahlzeiten}}",
+  "@todayEaten": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "water": "Wasser: {count} Glas",
+  "@water": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyStats": "Wochen-Statistik",
+  "streakDays": "{count} Tage",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsEncouragement": "Gut gemacht! An Tagen mit 3+ Mahlzeiten ist deine Energie spürbar besser. 🚀",
+  "energyHigh": "⚡ High",
+  "energyMed": "🔋 Med",
+  "energyLow": "🪫 Low",
+  "tookMeds": "Medikamente genommen?",
+  "loggedLate": "Nachgetragen",
+  "timeAt": "um {time} Uhr",
+  "@timeAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "noMealsToday": "Noch keine Mahlzeiten heute",
+  "pressAddToStart": "Drücke auf Hinzufügen, um zu beginnen!",
+  "breakfastReminderTitle": "Frühstückszeit! 🍳",
+  "breakfastReminderBody": "Hast du heute schon gefrühstückt? Logge deine Mahlzeit.",
+  "lunchReminderTitle": "Mittagessen! 🥗",
+  "lunchReminderBody": "Vergiss nicht dein Mittagessen zu loggen.",
+  "dinnerReminderTitle": "Abendessen! 🍽️",
+  "dinnerReminderBody": "Zeit für dein Abendessen. Denk ans Loggen!",
+  "testNotificationTitle": "Test Benachrichtigung 🚀",
+  "testNotificationBody": "Wenn du das siehst, funktionieren die Benachrichtigungen!",
+  "noMealsDesc": "Tippe auf Hinzufügen, um deinen Tag zu tracken.",
+  "simpleMode": "Simple",
+  "mealAdded": "{mealType} hinzugefügt ✅",
+  "@mealAdded": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
+  "themeMode": "Erscheinungsbild",
+  "themeSystem": "System",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel",
+  "notifications": "Benachrichtigungen",
+  "reminders": "Erinnerungen (Frühstück, Mittag, Abend)",
+  "simpleModeDesc": "Einfacher Modus (Ohne Zeit/Energie abzufragen)",
+  "showStats": "Wochen-Statistik auf Startseite anzeigen",
+  "addSafeFood": "Safe Food hinzufügen",
+  "newSafeFood": "Neues Safe Food",
+  "save": "Speichern",
+  "deleteData": "Alle Daten löschen",
+  "deleteDataWarning": "Dies löscht alle deine geloggten Mahlzeiten. Dies kann nicht rückgängig gemacht werden.",
+  "dataDeleted": "Alle Daten wurden gelöscht",
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "todayMealsTitle": "Heutige Mahlzeiten",
+  "exportFailed": "❌ Export fehlgeschlagen: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "importDataConfirmTitle": "Daten importieren?",
+  "importDataConfirmDesc": "Dies wird ALLE bestehenden Mahlzeiten ersetzen.\nSicher fortfahren?",
+  "importBtn": "Importieren",
+  "importSuccess": "✅ Daten erfolgreich importiert",
+  "importFailed": "❌ Import fehlgeschlagen: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "clearDataConfirmTitle": "Alle Daten löschen?",
+  "clearDataConfirmDesc": "Diese Aktion löscht ALLE gespeicherten Mahlzeiten und kann nicht rückgängig gemacht werden.\n\nSicher fortfahren?",
+  "clearDataBtn": "Löschen",
+  "clearDataSuccess": "✅ Alle Daten wurden gelöscht",
+  "clearDataFailed": "❌ Fehler beim Löschen: {error}",
+  "@clearDataFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "simpleModeDescSub": "Nur ein Button, keine Auswahl",
+  "renameMeals": "Mahlzeiten umbenennen",
+  "renameMealsDesc": "Eigene Namen und Emojis für Buttons festlegen",
+  "remindersDesc": "Sanfte Erinnerungen aktivieren",
+  "testNotification": "Benachrichtigung testen",
+  "testNotificationDesc": "Sende eine sofortige Test-Nachricht",
+  "testNotificationSent": "Test-Benachrichtigung gesendet!",
+  "medicationTracker": "Medikamenten-Tracker",
+  "medicationTrackerDesc": "Frage beim Essen-Loggen nach Medikamenten",
+  "weeklyStatsDesc": "Streak-Übersicht auf Startseite anzeigen",
+  "exportPdfDesc": "Tagebuch für den Arzt/Therapeuten",
+  "exportCsvName": "Als CSV (Excel) exportieren",
+  "exportCsvDesc": "Rohdaten als Tabelle",
+  "dataManagement": "Datenverwaltung",
+  "exportData": "Daten exportieren",
+  "exportDataDesc": "Sicherheitskopie als JSON erstellen",
+  "importData": "Daten importieren",
+  "importDataDesc": "Backup-Datei wiederherstellen",
+  "clearDataWarn": "Vorsicht: Diese Aktion ist unwiderruflich",
+  "darkModeDesc": "Dunkles Design aktivieren",
+  "privacy": "Datenschutz",
+  "privacyDesc": "Alle Daten werden lokal gespeichert",
+  "privacyDialogText": "Alle Daten sind lokal auf Ihrem Gerät gespeichert. Es gehen keine Informationen an einen Server.\n\nBackups werden nur mit Ihrer expliziten Zustimmung erstellt.",
+  "ok": "OK",
+  "developer": "Entwickler",
+  "githubRepo": "GitHub Repository",
+  "githubRepoDesc": "Quellcode ansehen & beitragen",
+  "devWebsite": "Entwickler Webseite",
+  "devWebsiteDesc": "Mehr über den Autor erfahren",
+  "linkError": "Konnte Link nicht öffnen",
+  "aboutApp": "Über MealBox",
+  "historyTitle": "Mahlzeiten-Historie 📅",
+  "mealDeleted": "Mahlzeit gelöscht",
+  "noMealsOnDay": "Keine Mahlzeiten an diesem Tag",
+  "totalMeals": "Gesamt: {count} {count, plural, =1{Mahlzeit} other{Mahlzeiten}}",
+  "@totalMeals": { "placeholders": { "count": { "type": "int" } } },
+  "safeFoodsTitle": "Safe Foods 🛟",
+  "noSafeFoods": "Noch keine Safe Foods hinzugefügt.",
+  "safeFoodName": "Name des Lebensmittels",
+  "safeFoodAction": "Was möchtest du tun?",
+  "logFood": "Loggen (Low Energy)",
+  "time": "Uhrzeit",
+  "energyLevelText": "Energie Level",
+  "unknown": "Unbekannt",
+  "weekPrefix": "Woche vom",
+  "whatDidYouEat": "Was hast du gegessen? 🍽️",
+  "selectTime": "Zeit auswählen",
+  "resetToNow": "Auf jetzt zurücksetzen",
+  "loggedLateHint": "Wird als nachgetragene Mahlzeit gespeichert",
+  "currentTimeHint": "Ohne Auswahl wird die aktuelle Zeit verwendet",
+  "energyLevelOpt": "Energie-Level (optional):",
+  "addPhoto": "Foto hinzufügen",
+  "mealNumber": "Mahlzeit {number}",
+  "@mealNumber": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  }
+}

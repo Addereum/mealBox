@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 import '../screens/home_screen.dart';
 import '../services/settings_service.dart';
 
@@ -39,6 +41,14 @@ class MealBoxApp extends StatelessWidget {
 
             return MaterialApp(
               title: 'MealBox',
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
               theme: ThemeData(
                 useMaterial3: true,
                 colorScheme: lightColorScheme,

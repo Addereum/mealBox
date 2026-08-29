@@ -11,7 +11,8 @@ import 'package:hive/hive.dart';
 import '../services/settings_service.dart';
 import '../services/meal_service.dart';
 import '../services/export_service.dart';
-import '../services/notification_service.dart'; // Hinzugefügt
+import '../services/notification_service.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:url_launcher/url_launcher.dart';
@@ -134,14 +135,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('✅ Daten erfolgreich exportiert'),
+          content: Text(AppLocalizations.of(context)!.exportSuccess),
           backgroundColor: Colors.teal,
         ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('❌ Export fehlgeschlagen: $e'),
+          content: Text(AppLocalizations.of(context)!.exportFailed(e.toString())),
           backgroundColor: Colors.red,
         ),
       );
@@ -179,19 +180,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final shouldImport = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Daten importieren?'),
-          content: Text(
-            'Dies wird ALLE bestehenden Mahlzeiten ersetzen.\n'
-            'Sicher fortfahren?',
-          ),
+          title: Text(AppLocalizations.of(context)!.importDataConfirmTitle),
+          content: Text(AppLocalizations.of(context)!.importDataConfirmDesc),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text('Abbrechen', style: TextStyle(color: Colors.grey)),
+              child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Colors.grey)),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text('Importieren', style: TextStyle(color: Colors.red)),
+              child: Text(AppLocalizations.of(context)!.importBtn, style: TextStyle(color: Colors.red)),
             ),
           ],
         ),
@@ -255,7 +253,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('✅ Daten erfolgreich importiert'),
+          content: Text(AppLocalizations.of(context)!.importSuccess),
           backgroundColor: Colors.teal,
           duration: Duration(seconds: 3),
         ),
@@ -270,7 +268,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('❌ Import fehlgeschlagen: $e'),
+          content: Text(AppLocalizations.of(context)!.importFailed(e.toString())),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 5),
         ),
@@ -284,20 +282,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final shouldClear = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Alle Daten löschen?'),
-        content: Text(
-          'Diese Aktion löscht ALLE gespeicherten Mahlzeiten '
-          'und kann nicht rückgängig gemacht werden.\n\n'
-          'Sicher fortfahren?',
-        ),
+        title: Text(AppLocalizations.of(context)!.clearDataConfirmTitle),
+        content: Text(AppLocalizations.of(context)!.clearDataConfirmDesc),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Abbrechen', style: TextStyle(color: Colors.grey)),
+            child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: Colors.grey)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Löschen', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.clearDataBtn, style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -311,7 +305,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('✅ Alle Daten wurden gelöscht'),
+            content: Text(AppLocalizations.of(context)!.clearDataSuccess),
             backgroundColor: Colors.teal,
             duration: Duration(seconds: 3),
           ),
@@ -324,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Fehler beim Löschen: $e'),
+            content: Text(AppLocalizations.of(context)!.clearDataFailed(e.toString())),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 5),
           ),
@@ -337,15 +331,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Einstellungen'),
+        title: Text(AppLocalizations.of(context)!.settings),
       ),
       body: ListView(
         children: [
           // Simple Mode
           ListTile(
             leading: Icon(Icons.accessibility_new, color: Colors.teal),
-            title: Text('Simpler Modus'),
-            subtitle: Text('Nur ein Button, keine Auswahl'),
+            title: Text(AppLocalizations.of(context)!.simpleMode),
+            subtitle: Text(AppLocalizations.of(context)!.simpleModeDescSub),
             trailing: Switch(
               value: _simpleMode,
               onChanged: _toggleSimpleMode,
@@ -357,8 +351,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Meal Names
           ListTile(
             leading: Icon(Icons.edit_note, color: Colors.teal),
-            title: Text('Mahlzeiten umbenennen'),
-            subtitle: Text('Eigene Namen und Emojis für Buttons festlegen'),
+            title: Text(AppLocalizations.of(context)!.renameMeals),
+            subtitle: Text(AppLocalizations.of(context)!.renameMealsDesc),
             trailing:
                 Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
             onTap: () {
@@ -374,15 +368,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Notifications
           ListTile(
             leading: Icon(Icons.notifications, color: Colors.teal),
-            title: Text('Erinnerungen'),
-            subtitle: Text('Sanfte Erinnerungen aktivieren'),
+            title: Text(AppLocalizations.of(context)!.notifications),
+            subtitle: Text(AppLocalizations.of(context)!.remindersDesc),
             trailing: Switch(
               value: _notifications,
               onChanged: (value) async {
                 await _settingsService.setNotifications(value);
                 if (value) {
                   await NotificationService().requestPermissions();
-                  await NotificationService().scheduleMealReminders();
+                  await NotificationService().scheduleMealReminders(AppLocalizations.of(context)!);
                 } else {
                   await NotificationService().cancelAllNotifications();
                 }
@@ -394,17 +388,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           if (_notifications) // Zeige den Test-Button nur, wenn Benachrichtigungen an sind
             ListTile(
               leading: Icon(Icons.notification_add, color: Colors.teal),
-              title: Text('Benachrichtigung testen'),
-              subtitle: Text('Sende eine sofortige Test-Nachricht'),
+              title: Text(AppLocalizations.of(context)!.testNotification),
+              subtitle: Text(AppLocalizations.of(context)!.testNotificationDesc),
               trailing: Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () async {
-                await NotificationService().testNotification();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Test-Benachrichtigung gesendet!'),
-                    backgroundColor: Colors.teal,
-                  ),
-                );
+                await NotificationService().testNotification(AppLocalizations.of(context)!);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.testNotificationSent),
+                      backgroundColor: Colors.teal,
+                    ),
+                  );
+                }
               },
             ),
           Divider(),
@@ -412,8 +408,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Medication Tracker
           ListTile(
             leading: Icon(Icons.medication, color: Colors.teal),
-            title: Text('Medikamenten-Tracker'),
-            subtitle: Text('Frage beim Essen-Loggen nach Medikamenten'),
+            title: Text(AppLocalizations.of(context)!.medicationTracker),
+            subtitle: Text(AppLocalizations.of(context)!.medicationTrackerDesc),
             trailing: Switch(
               value: _trackMedications,
               onChanged: (value) async {
@@ -427,8 +423,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Weekly Stats
           ListTile(
             leading: Icon(Icons.bar_chart, color: Colors.teal),
-            title: Text('Wochen-Statistik'),
-            subtitle: Text('Streak-Übersicht auf Startseite anzeigen'),
+            title: Text(AppLocalizations.of(context)!.weeklyStats),
+            subtitle: Text(AppLocalizations.of(context)!.weeklyStatsDesc),
             trailing: Switch(
               value: _showStats,
               onChanged: (value) async {
@@ -443,7 +439,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
-              'Therapie-Export',
+              AppLocalizations.of(context)!.therapyExport,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -453,8 +449,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: Icon(Icons.picture_as_pdf, color: Colors.redAccent),
-            title: Text('Als PDF exportieren'),
-            subtitle: Text('Tagebuch für den Arzt/Therapeuten'),
+            title: Text(AppLocalizations.of(context)!.exportPdf),
+            subtitle: Text(AppLocalizations.of(context)!.exportPdfDesc),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
               try {
@@ -466,8 +462,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: Icon(Icons.table_chart, color: Colors.green),
-            title: Text('Als CSV (Excel) exportieren'),
-            subtitle: Text('Rohdaten als Tabelle'),
+            title: Text(AppLocalizations.of(context)!.exportCsvName),
+            subtitle: Text(AppLocalizations.of(context)!.exportCsvDesc),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
               try {
@@ -483,7 +479,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
-              'Datenverwaltung',
+              AppLocalizations.of(context)!.dataManagement,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -497,8 +493,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: _isExporting
                 ? CircularProgressIndicator(color: Colors.teal, strokeWidth: 2)
                 : Icon(Icons.backup, color: Colors.teal),
-            title: Text('Daten exportieren'),
-            subtitle: Text('Sicherheitskopie als JSON erstellen'),
+            title: Text(AppLocalizations.of(context)!.exportData),
+            subtitle: Text(AppLocalizations.of(context)!.exportDataDesc),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
             onTap: _isExporting ? null : _exportData,
           ),
@@ -508,8 +504,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: _isImporting
                 ? CircularProgressIndicator(color: Colors.teal, strokeWidth: 2)
                 : Icon(Icons.upload_file, color: Colors.teal),
-            title: Text('Daten importieren'),
-            subtitle: Text('Backup-Datei wiederherstellen'),
+            title: Text(AppLocalizations.of(context)!.importData),
+            subtitle: Text(AppLocalizations.of(context)!.importDataDesc),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
             onTap: _isImporting ? null : _importData,
           ),
@@ -518,8 +514,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: Icon(Icons.delete_forever, color: Colors.red),
             title:
-                Text('Alle Daten löschen', style: TextStyle(color: Colors.red)),
-            subtitle: Text('Vorsicht: Diese Aktion ist unwiderruflich'),
+                Text(AppLocalizations.of(context)!.deleteData, style: TextStyle(color: Colors.red)),
+            subtitle: Text(AppLocalizations.of(context)!.clearDataWarn),
             trailing:
                 Icon(Icons.arrow_forward_ios, size: 16, color: Colors.red),
             onTap: _clearAllData,
@@ -529,8 +525,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Dark Mode
           ListTile(
             leading: Icon(Icons.dark_mode, color: Colors.teal),
-            title: Text('Dark Mode'),
-            subtitle: Text('Dunkles Design aktivieren'),
+            title: Text(AppLocalizations.of(context)!.themeMode),
+            subtitle: Text(AppLocalizations.of(context)!.darkModeDesc),
             trailing: Switch(
               value: _settingsService.themeMode == ThemeMode.dark,
               onChanged: (value) {
@@ -544,21 +540,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // Privacy
           ListTile(
             leading: Icon(Icons.security, color: Colors.teal),
-            title: Text('Datenschutz'),
-            subtitle: Text('Alle Daten werden lokal gespeichert'),
+            title: Text(AppLocalizations.of(context)!.privacy),
+            subtitle: Text(AppLocalizations.of(context)!.privacyDesc),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Datenschutz'),
-                  content: Text(
-                      'Alle Daten sind lokal auf Ihrem Gerät gespeichert. '
-                      'Es gehen keine Informationen an einen Server.\n\n'
-                      'Backups werden nur mit Ihrer expliziten Zustimmung erstellt.'),
+                  title: Text(AppLocalizations.of(context)!.privacy),
+                  content: Text(AppLocalizations.of(context)!.privacyDialogText),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text('OK'),
+                      child: Text(AppLocalizations.of(context)!.ok),
                     ),
                   ],
                 ),
@@ -570,7 +563,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
-              'Entwickler',
+              AppLocalizations.of(context)!.developer,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -580,8 +573,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             leading: Icon(Icons.code, color: Colors.teal),
-            title: Text('GitHub Repository'),
-            subtitle: Text('Quellcode ansehen & beitragen'),
+            title: Text(AppLocalizations.of(context)!.githubRepo),
+            subtitle: Text(AppLocalizations.of(context)!.githubRepoDesc),
             trailing: Icon(Icons.open_in_new, size: 16, color: Colors.grey),
             onTap: () async {
               final Uri url = Uri.parse(
@@ -589,14 +582,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
                 if (mounted)
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Konnte Link nicht öffnen')));
+                      SnackBar(content: Text(AppLocalizations.of(context)!.linkError)));
               }
             },
           ),
           ListTile(
             leading: Icon(Icons.language, color: Colors.teal),
-            title: Text('Entwickler Webseite'),
-            subtitle: Text('Mehr über den Autor erfahren'),
+            title: Text(AppLocalizations.of(context)!.devWebsite),
+            subtitle: Text(AppLocalizations.of(context)!.devWebsiteDesc),
             trailing: Icon(Icons.open_in_new, size: 16, color: Colors.grey),
             onTap: () async {
               final Uri url = Uri.parse(
@@ -604,7 +597,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
                 if (mounted)
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Konnte Link nicht öffnen')));
+                      SnackBar(content: Text(AppLocalizations.of(context)!.linkError)));
               }
             },
           ),
@@ -613,8 +606,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // App Info
           ListTile(
             leading: Icon(Icons.info, color: Colors.teal),
-            title: Text('Über MealBox'),
-            subtitle: Text('Version $_appVersion • Open Source'),
+            title: Text(AppLocalizations.of(context)!.aboutApp),
+            subtitle: Text('${AppLocalizations.of(context)!.appVersion(_appVersion)} • Open Source'),
             onTap: () {
               showAboutDialog(
                 context: context,

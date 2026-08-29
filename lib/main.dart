@@ -11,6 +11,8 @@ import 'dart:ui';
 import 'dart:isolate';
 
 import 'app/mealbox_app.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'services/meal_service.dart';
 import 'services/settings_service.dart';
 import 'services/notification_service.dart';
@@ -72,7 +74,13 @@ void main() async {
     final notificationService = NotificationService();
     await notificationService.init();
     if (settingsService.notifications) {
-      await notificationService.scheduleMealReminders();
+      Locale systemLocale = PlatformDispatcher.instance.locale;
+      // Default to English if the system language is not German
+      if (systemLocale.languageCode != 'de') {
+        systemLocale = const Locale('en');
+      }
+      final l10n = lookupAppLocalizations(systemLocale);
+      await notificationService.scheduleMealReminders(l10n);
     }
     
     // Hintergrund-Kommunikation einrichten (IsolateNameServer)

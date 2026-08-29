@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/meal.dart';
+import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class MealListTile extends StatelessWidget {
   final Meal meal;
@@ -88,7 +89,7 @@ class MealListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('um ${meal.timeString} Uhr'),
+            Text(AppLocalizations.of(context)!.timeAt(meal.timeString)),
             if (meal.energyLevel != null)
               Text(
                 meal.energyLevel!,
@@ -100,7 +101,7 @@ class MealListTile extends StatelessWidget {
               ),
             if (meal.isLoggedLate)
               Text(
-                'Nachgetragen',
+                AppLocalizations.of(context)!.loggedLate,
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.orange,
