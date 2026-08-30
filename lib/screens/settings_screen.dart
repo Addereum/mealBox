@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'meal_names_screen.dart';
 import '../models/meal.dart';
+import '../constants.dart';
 import 'home_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _isExporting = false;
   bool _isImporting = false;
   String _appVersion = '1.0.0';
-  static const String _appCodename = 'Dopamine Donut';
+  
   @override
   void initState() {
     super.initState();
@@ -84,7 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _notifications = _settingsService.notifications;
       _showStats = _settingsService.showStats;
       _trackMedications = _settingsService.trackMedications;
-      _appVersion = '${packageInfo.version} "$_appCodename"';
+      _appVersion = '${packageInfo.version} "${AppConstants.appCodename}"';
     });
   }
 
