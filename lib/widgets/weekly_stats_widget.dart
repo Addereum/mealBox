@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../services/meal_service.dart';
 import '../models/meal.dart';
-import '../services/meal_service.dart';
 import 'package:mealbox/l10n/generated/app_localizations.dart';
 
 class WeeklyStatsWidget extends StatelessWidget {

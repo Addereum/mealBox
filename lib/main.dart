@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:home_widget/home_widget.dart';
@@ -12,7 +10,6 @@ import 'dart:isolate';
 
 import 'app/mealbox_app.dart';
 import 'package:mealbox/l10n/generated/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'services/meal_service.dart';
 import 'services/settings_service.dart';
 import 'services/notification_service.dart';

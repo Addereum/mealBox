@@ -175,7 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _logSimpleMealInternal() {
     _logMeal(AppLocalizations.of(context)!.meal, null, null, null, null);
   }
 
