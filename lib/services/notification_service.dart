@@ -1,8 +1,8 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/foundation.dart';
 import 'package:mealbox/l10n/generated/app_localizations.dart';
+import '../constants.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -120,7 +120,7 @@ class NotificationService {
       _nextInstanceOfTime(hour, minute),
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'mealbox_reminders',
+          AppConstants.notificationChannelReminders,
           'Mahlzeiten Erinnerungen',
           channelDescription: 'Erinnert dich an regelmäßige Mahlzeiten',
           importance: Importance.high,
@@ -152,7 +152,7 @@ class NotificationService {
       l10n.testNotificationBody,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'mealbox_test',
+          AppConstants.notificationChannelTest,
           'Test Benachrichtigungen',
           channelDescription: 'Wird zum Testen der Benachrichtigungen verwendet',
           importance: Importance.high,

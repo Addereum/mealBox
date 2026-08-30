@@ -578,10 +578,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: Text(AppLocalizations.of(context)!.githubRepoDesc),
             trailing: Icon(Icons.open_in_new, size: 16, color: Colors.grey),
             onTap: () async {
-              final Uri url = Uri.parse(
-                  'https://github.com/addereum/mealbox'); // HIER deinen echten Link einsetzen
-              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                if (mounted)
+              if (!await launchUrl(Uri.parse(AppConstants.githubRepoUrl), mode: LaunchMode.externalApplication)) {
+                if (context.mounted)
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context)!.linkError)));
               }
@@ -593,10 +591,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: Text(AppLocalizations.of(context)!.devWebsiteDesc),
             trailing: Icon(Icons.open_in_new, size: 16, color: Colors.grey),
             onTap: () async {
-              final Uri url = Uri.parse(
-                  'https://addereum.de'); // HIER deinen echten Link einsetzen
-              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                if (mounted)
+              if (!await launchUrl(Uri.parse(AppConstants.developerWebsiteUrl), mode: LaunchMode.externalApplication)) {
+                if (context.mounted)
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context)!.linkError)));
               }
@@ -614,8 +610,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context: context,
                 applicationName: 'MealBox',
                 applicationVersion: _appVersion,
-                applicationLegalese: '© 2026 • Mealbox\n'
-                    'Für Menschen mit ADHS, Autismus & Depressionen',
+                applicationLegalese: AppConstants.appLegalese,
                 children: [
                   SizedBox(height: 20),
                   Text(
