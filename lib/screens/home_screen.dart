@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final SettingsService _settingsService = SettingsService.instance;
-  bool _isLoading = true;
+
   bool _simpleMode = false;
   bool _showStats = true;
   final ScrollController _scrollController = ScrollController();
@@ -64,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _simpleMode = _settingsService.simpleMode;
       _showStats = _settingsService.showStats;
-      _isLoading = false;
     });
     
     // Request notification permissions on app start (Android 13+)
@@ -175,8 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-    _logMeal(AppLocalizations.of(context)!.meal, null, null, null, null);
-  }
+
 
   void _triggerSOS() {
     final safeFoods = _settingsService.safeFoods;
