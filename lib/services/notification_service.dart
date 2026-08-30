@@ -17,7 +17,7 @@ class NotificationService {
     if (kIsWeb) return;
 
     tz.initializeTimeZones();
-    tz.setLocalLocation(timezone.getLocation('Europe/Berlin'));
+    timezone.setLocalLocation(timezone.getLocation('Europe/Berlin'));
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
