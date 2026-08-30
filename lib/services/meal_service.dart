@@ -151,7 +151,7 @@ class MealService with ChangeNotifier {
 
   Future<Box<int>> _getWaterBox() async {
     if (_waterBox == null || !_waterBox!.isOpen) {
-      _waterBox = await Hive.openBox<int>(_waterBoxName);
+      _waterBox = await Hive.openBox<int>(AppConstants.waterBoxName);
     }
     return _waterBox!;
   }
