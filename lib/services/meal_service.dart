@@ -82,7 +82,7 @@ class MealService with ChangeNotifier {
 
     final dateKey = meal.dateKey;
     List<dynamic> meals = box.get(dateKey, defaultValue: []);
-    meals.add(meal); // Nutzt TypeAdapter statt toMap()
+    meals.add(meal); // Uses TypeAdapter instead of toMap()
 
     await box.put(dateKey, meals);
     

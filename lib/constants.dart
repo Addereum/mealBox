@@ -1,6 +1,6 @@
-/// Globale App-Konstanten
+/// Global App Constants
 class AppConstants {
-  /// Der Codename für den aktuellen Release
+  /// The codename for the current release
   static const String appCodename = 'Dopamine Donut';
 
   // URLs

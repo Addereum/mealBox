@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart'; // WICHTIG: Provider importieren
+import 'package:provider/provider.dart'; 
 import '../models/meal.dart';
 import '../services/meal_service.dart';
 import '../widgets/meal_list_tile.dart';
@@ -15,7 +15,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  // ENTFERNEN: final MealService _mealService = MealService();
   Map<String, List<Meal>> _allMeals = {};
   bool _isLoading = true;
 
@@ -27,7 +26,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<void> _loadMeals() async {
     setState(() => _isLoading = true);
-    // ÄNDERUNG: MealService über Provider holen
     final mealService = Provider.of<MealService>(context, listen: false);
     _allMeals = await mealService.getAllMeals();
     setState(() => _isLoading = false);
@@ -43,10 +41,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
 
     if (shouldDelete ?? false) {
-      // ÄNDERUNG: MealService über Provider holen
       final mealService = Provider.of<MealService>(context, listen: false);
       await mealService.deleteMeal(meal.dateKey, meal.id);
-      // Daten automatisch neu laden nach Löschung
+      // Auto-reload data after deletion
       _loadMeals();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.mealDeleted)),
@@ -66,7 +63,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MealService>( // WICHTIG: Consumer für automatische Updates
+    return Consumer<MealService>( 
       builder: (context, mealService, child) {
         return Scaffold(
           appBar: AppBar(

@@ -28,7 +28,7 @@ class _MealNamesScreenState extends State<MealNamesScreen> {
 
   Future<void> _saveNames() async {
     final newNames = _controllers.map((c) => c.text.trim()).toList();
-    // Fallback falls eins leer ist
+    // Fallback if one is empty
     for (int i = 0; i < newNames.length; i++) {
       if (newNames[i].isEmpty) {
         newNames[i] = "Mahlzeit ${i + 1}";

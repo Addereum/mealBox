@@ -18,7 +18,6 @@ class ExportService {
   Future<void> exportAsCsv() async {
     final allMealsMap = await _mealService.getAllMeals();
     
-    // Header
     List<List<dynamic>> rows = [
       ["Datum", "Uhrzeit", "Mahlzeit", "Energie-Level", "Medikamente"]
     ];

@@ -95,7 +95,7 @@ class SettingsService with ChangeNotifier {
   Future<void> setThemeMode(ThemeMode mode) async {
     final box = await _getBox();
 
-    // nur light/dark speichern, alles andere wird zu light
+    // Only save light/dark, everything else defaults to light
     final themeStr = (mode == ThemeMode.dark) ? 'dark' : 'light';
 
     await box.put(_themeModeKey, themeStr);

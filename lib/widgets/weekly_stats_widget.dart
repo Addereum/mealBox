@@ -21,7 +21,7 @@ class WeeklyStatsWidget extends StatelessWidget {
       future: Future.wait(last7Days.map((d) => mealService.getMealsForDate(d))),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const SizedBox.shrink(); // Verstecken bis geladen
+          return const SizedBox.shrink(); // Hide until loaded
         }
         
         final allDaysMeals = snapshot.data!;
@@ -96,7 +96,7 @@ class WeeklyStatsWidget extends StatelessWidget {
                   children: List.generate(7, (index) {
                     final date = last7Days[index];
                     final hasMeals = allDaysMeals[index].isNotEmpty;
-                    final isToday = index == 6; // letztes Element ist heute
+                    final isToday = index == 6; // Last element is today
                     
                     return Column(
                       children: [

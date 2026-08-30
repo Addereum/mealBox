@@ -117,7 +117,6 @@ class _MealDialogState extends State<MealDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-            // Header
             Container(
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -139,7 +138,7 @@ class _MealDialogState extends State<MealDialog> {
               ),
             ),
             
-            // Zeitauswahl
+            // Time selection
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Column(
@@ -230,7 +229,6 @@ class _MealDialogState extends State<MealDialog> {
             
             Divider(height: 1),
             
-            // Energy Level
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Column(
@@ -289,7 +287,6 @@ class _MealDialogState extends State<MealDialog> {
             
             Divider(height: 1),
             
-            // Foto Button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
@@ -336,7 +333,6 @@ class _MealDialogState extends State<MealDialog> {
 
             Divider(height: 1),
             
-            // Meal Options Grid
             Padding(
               padding: EdgeInsets.all(20),
               child: GridView.count(
@@ -354,7 +350,6 @@ class _MealDialogState extends State<MealDialog> {
               ),
             ),
             
-            // Cancel Button
             Padding(
               padding: EdgeInsets.only(bottom: 15, left: 20, right: 20),
               child: SizedBox(

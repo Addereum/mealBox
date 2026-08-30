@@ -13,7 +13,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    if (kIsWeb) return; // Notifications on web are not handled this way currently
+    if (kIsWeb) return;  on web are not handled this way currently
 
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Europe/Berlin'));
