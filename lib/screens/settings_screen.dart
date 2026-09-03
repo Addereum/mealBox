@@ -1,4 +1,3 @@
-// settings_screen.dart - AM ANFANG
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -7,18 +6,17 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:hive/hive.dart';
 import '../services/settings_service.dart';
 import '../services/meal_service.dart';
 import '../services/export_service.dart';
 import '../services/notification_service.dart';
 import 'package:mealbox/l10n/generated/app_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'meal_names_screen.dart';
 import '../models/meal.dart';
+import '../constants.dart';
 import 'home_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -38,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _isExporting = false;
   bool _isImporting = false;
   String _appVersion = '1.0.0';
-
+  
   @override
   void initState() {
     super.initState();
@@ -84,7 +82,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _notifications = _settingsService.notifications;
       _showStats = _settingsService.showStats;
       _trackMedications = _settingsService.trackMedications;
-      _appVersion = packageInfo.version;
+      _appVersion = '${packageInfo.version} "${AppConstants.appCodename}"';
     });
   }
 
@@ -96,11 +94,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isExporting = true);
 
     try {
-      // 1. Sammle alle Mahlzeiten und Wasser
+      // 1. Collect all meals and water data
       final allMeals = await _mealService.getAllMeals();
       final allWater = await _mealService.getAllWaterData();
 
-      // 2. Konvertiere zu JSON
+      // 2. Convert to JSON
       final exportData = {
         'app': 'MealBox',
         'version': '1.1',
@@ -119,13 +117,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       final jsonData = jsonEncode(exportData);
 
-      // 3. Speichere lokal
+      // 3. Save locally
       final directory = await getApplicationDocumentsDirectory();
       final file = File(
           '${directory.path}/mealbox_backup_${DateTime.now().millisecondsSinceEpoch}.json');
       await file.writeAsString(jsonData);
 
-      // 4. Teile/Exportiere
+      // 4. Share/Export
       await Share.shareXFiles(
         [XFile(file.path)],
         text:
@@ -155,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _isImporting = true);
 
     try {
-      // 1. Datei auswählen
+      // 1. Pick file
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -171,12 +169,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final jsonString = await file.readAsString();
       final importData = jsonDecode(jsonString);
 
-      // 2. Validierung
+      // 2. Validation
       if (importData['app'] != 'MealBox') {
         throw Exception('Ungültige Backup-Datei');
       }
 
-      // 3. Bestätigungs-Dialog
+      // 3. Confirmation dialog
       final shouldImport = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
@@ -200,13 +198,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return;
       }
 
-      // 4. WICHTIG: MealService verwenden statt direkt Hive
       final mealService = Provider.of<MealService>(context, listen: false);
 
-      // Alte Daten löschen
+      // Delete old data
       await mealService.clearAllData();
 
-      // Neue Daten importieren (Einstellungen)
+      // Import new data (Settings)
       if (importData['safeFoods'] != null) {
         await _settingsService
             .setSafeFoods((importData['safeFoods'] as List).cast<String>());
@@ -220,7 +217,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Map<String, dynamic>.from(importData['waterData']));
       }
 
-      // Neue Daten importieren (Mahlzeiten)
+      // Import new data (Meals)
       if (importData['meals'] != null) {
         final List<Meal> importedMeals = [];
 
@@ -238,7 +235,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           }
         }
 
-        // Alle importierten Mahlzeiten hinzufügen
+        // Add all imported meals
         for (final meal in importedMeals) {
           await mealService.addMeal(meal.type, customTime: meal.dateTime);
         }
@@ -246,7 +243,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         print('✅ ${importedMeals.length} Mahlzeiten importiert');
       }
 
-      // 5. Settings importieren
+      // 5. Import settings
       if (importData['simpleMode'] != null) {
         await _settingsService.setSimpleMode(importData['simpleMode']);
       }
@@ -259,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       );
 
-      // 6. WICHTIG: Zurück zur Startseite mit Navigation, die den State resettet
+      // 6. Return to home screen and reset state
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -299,9 +296,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (shouldClear == true) {
       try {
-        // WICHTIG: MealService über Provider verwenden statt direkt Hive
         final mealService = Provider.of<MealService>(context, listen: false);
-        await mealService.clearAllData(); // Ruft notifyListeners() auf
+        await mealService.clearAllData(); // Calls notifyListeners()
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -335,7 +331,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: [
-          // Simple Mode
           ListTile(
             leading: Icon(Icons.accessibility_new, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.simpleMode),
@@ -348,7 +343,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // Meal Names
           ListTile(
             leading: Icon(Icons.edit_note, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.renameMeals),
@@ -365,7 +359,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // Notifications
           ListTile(
             leading: Icon(Icons.notifications, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.notifications),
@@ -385,7 +378,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
 
-          if (_notifications) // Zeige den Test-Button nur, wenn Benachrichtigungen an sind
+          if (_notifications) // Show test button only if notifications are enabled
             ListTile(
               leading: Icon(Icons.notification_add, color: Colors.teal),
               title: Text(AppLocalizations.of(context)!.testNotification),
@@ -405,7 +398,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           Divider(),
 
-          // Medication Tracker
           ListTile(
             leading: Icon(Icons.medication, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.medicationTracker),
@@ -420,7 +412,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // Weekly Stats
           ListTile(
             leading: Icon(Icons.bar_chart, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.weeklyStats),
@@ -435,7 +426,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // Therapie-Export Section
           Padding(
             padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
@@ -475,7 +465,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // Data Management Section
           Padding(
             padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
@@ -488,7 +477,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
 
-          // Export Data
           ListTile(
             leading: _isExporting
                 ? CircularProgressIndicator(color: Colors.teal, strokeWidth: 2)
@@ -499,7 +487,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: _isExporting ? null : _exportData,
           ),
 
-          // Import Data
           ListTile(
             leading: _isImporting
                 ? CircularProgressIndicator(color: Colors.teal, strokeWidth: 2)
@@ -510,7 +497,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: _isImporting ? null : _importData,
           ),
 
-          // Clear Data
           ListTile(
             leading: Icon(Icons.delete_forever, color: Colors.red),
             title:
@@ -522,7 +508,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // Dark Mode
           ListTile(
             leading: Icon(Icons.dark_mode, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.themeMode),
@@ -537,7 +522,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
 
-          // Privacy
           ListTile(
             leading: Icon(Icons.security, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.privacy),
@@ -559,7 +543,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
 
-          // Entwickler Links
+          // Developer Links
           Padding(
             padding: EdgeInsets.fromLTRB(16, 20, 16, 8),
             child: Text(
@@ -577,10 +561,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: Text(AppLocalizations.of(context)!.githubRepoDesc),
             trailing: Icon(Icons.open_in_new, size: 16, color: Colors.grey),
             onTap: () async {
-              final Uri url = Uri.parse(
-                  'https://github.com/addereum/mealbox'); // HIER deinen echten Link einsetzen
-              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                if (mounted)
+              if (!await launchUrl(Uri.parse(AppConstants.githubRepoUrl), mode: LaunchMode.externalApplication)) {
+                if (context.mounted)
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context)!.linkError)));
               }
@@ -592,10 +574,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             subtitle: Text(AppLocalizations.of(context)!.devWebsiteDesc),
             trailing: Icon(Icons.open_in_new, size: 16, color: Colors.grey),
             onTap: () async {
-              final Uri url = Uri.parse(
-                  'https://addereum.de'); // HIER deinen echten Link einsetzen
-              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                if (mounted)
+              if (!await launchUrl(Uri.parse(AppConstants.developerWebsiteUrl), mode: LaunchMode.externalApplication)) {
+                if (context.mounted)
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(AppLocalizations.of(context)!.linkError)));
               }
@@ -603,7 +583,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(),
 
-          // App Info
           ListTile(
             leading: Icon(Icons.info, color: Colors.teal),
             title: Text(AppLocalizations.of(context)!.aboutApp),
@@ -613,8 +592,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context: context,
                 applicationName: 'MealBox',
                 applicationVersion: _appVersion,
-                applicationLegalese: '© 2026 • Mealbox\n'
-                    'Für Menschen mit ADHS, Autismus & Depressionen',
+                applicationLegalese: AppConstants.appLegalese,
                 children: [
                   SizedBox(height: 20),
                   Text(

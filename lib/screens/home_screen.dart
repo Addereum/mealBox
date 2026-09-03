@@ -1,4 +1,3 @@
-// screens/home_screen.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final SettingsService _settingsService = SettingsService.instance;
-  bool _isLoading = true;
+
   bool _simpleMode = false;
   bool _showStats = true;
   final ScrollController _scrollController = ScrollController();
@@ -65,10 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _simpleMode = _settingsService.simpleMode;
       _showStats = _settingsService.showStats;
-      _isLoading = false;
     });
     
-    // Beim App-Start die Benachrichtigungsberechtigung (Android 13+) abfragen
+    // Request notification permissions on app start (Android 13+)
     if (_settingsService.notifications) {
       await NotificationService().requestPermissions();
       await NotificationService().scheduleMealReminders(AppLocalizations.of(context)!);
@@ -94,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _afterMealLogged(DateTime logTime) async {
     final mealService = Provider.of<MealService>(context, listen: false);
     
-    // Confetti Check (3 Mahlzeiten am Tag)
+    // Confetti check (3 meals a day)
     final todayMeals = await mealService.getMealsForDate(DateTime.now());
     if (todayMeals.length == 3) {
       _confettiController.play();
@@ -104,11 +102,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_settingsService.notifications) {
       final hour = logTime.hour;
       if (hour >= 5 && hour < 11) {
-        await NotificationService().cancelReminder(0); // Frühstück
+        await NotificationService().cancelReminder(0); // Breakfast
       } else if (hour >= 11 && hour < 16) {
-        await NotificationService().cancelReminder(1); // Mittagessen
+        await NotificationService().cancelReminder(1); // Lunch
       } else if (hour >= 16 && hour < 23) {
-        await NotificationService().cancelReminder(2); // Abendessen
+        await NotificationService().cancelReminder(2); // Dinner
       }
     }
   }
@@ -176,9 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _logSimpleMealInternal() {
-    _logMeal(AppLocalizations.of(context)!.meal, null, null, null, null);
-  }
+
 
   void _triggerSOS() {
     final safeFoods = _settingsService.safeFoods;
@@ -226,7 +222,6 @@ class _HomeScreenState extends State<HomeScreen> {
     
     return Consumer<MealService>(
       builder: (context, mealService, child) {
-        // WICHTIG: FutureBuilder für dynamische Updates
         return FutureBuilder<List<Meal>>(
           future: mealService.getMealsForDate(DateTime.now()),
           builder: (context, snapshot) {
@@ -300,7 +295,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Header
                         Card(
                           color: Theme.of(context).colorScheme.primary,
                           elevation: 0,
@@ -368,7 +362,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         
                         SizedBox(height: 16),
                         
-                        // Water Tracker
                         FutureBuilder<int>(
                           future: mealService.getWaterForDate(DateTime.now()),
                           builder: (context, snapshot) {
@@ -418,7 +411,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         
                         SizedBox(height: 24),
                         
-                        // Add Button
                         Center(
                           child: Column(
                             children: [
@@ -487,7 +479,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         
                         SizedBox(height: 32),
                         
-                        // Today's Meals
                         Text(
                           AppLocalizations.of(context)!.todayMealsTitle,
                           style: TextStyle(

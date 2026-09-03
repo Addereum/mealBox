@@ -1,8 +1,9 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/timezone.dart' as timezone;
 import 'package:flutter/foundation.dart';
 import 'package:mealbox/l10n/generated/app_localizations.dart';
+import '../constants.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -13,10 +14,10 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    if (kIsWeb) return; // Notifications on web are not handled this way currently
+    if (kIsWeb) return;
 
     tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Europe/Berlin'));
+    timezone.setLocalLocation(timezone.getLocation('Europe/Berlin'));
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -120,7 +121,7 @@ class NotificationService {
       _nextInstanceOfTime(hour, minute),
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'mealbox_reminders',
+          AppConstants.notificationChannelReminders,
           'Mahlzeiten Erinnerungen',
           channelDescription: 'Erinnert dich an regelmäßige Mahlzeiten',
           importance: Importance.high,
@@ -134,10 +135,10 @@ class NotificationService {
     );
   }
 
-  tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+  timezone.TZDateTime _nextInstanceOfTime(int hour, int minute) {
+    final timezone.TZDateTime now = timezone.TZDateTime.now(timezone.local);
+    timezone.TZDateTime scheduledDate =
+        timezone.TZDateTime(timezone.local, now.year, now.month, now.day, hour, minute);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -152,7 +153,7 @@ class NotificationService {
       l10n.testNotificationBody,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'mealbox_test',
+          AppConstants.notificationChannelTest,
           'Test Benachrichtigungen',
           channelDescription: 'Wird zum Testen der Benachrichtigungen verwendet',
           importance: Importance.high,

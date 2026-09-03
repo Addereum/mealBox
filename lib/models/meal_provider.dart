@@ -8,13 +8,13 @@ class MealProvider extends ChangeNotifier {
   
   void addMeal(Meal meal) {
     _meals.add(meal);
-    notifyListeners(); // UI aktualisiert sich automatisch
+    notifyListeners(); // UI updates automatically
     print('Mahlzeit hinzugefügt. Total: ${_meals.length}');
   }
   
   void clearAllMeals() {
     _meals.clear();
-    notifyListeners(); // UI aktualisiert sich automatisch
+    notifyListeners(); // UI updates automatically
     print('Alle Mahlzeiten gelöscht');
   }
   

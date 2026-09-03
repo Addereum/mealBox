@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:home_widget/home_widget.dart';
@@ -12,25 +10,24 @@ import 'dart:isolate';
 
 import 'app/mealbox_app.dart';
 import 'package:mealbox/l10n/generated/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'services/meal_service.dart';
 import 'services/settings_service.dart';
 import 'services/notification_service.dart';
 import 'models/meal.dart';
 
-// Callback für das Homescreen-Widget (muss Top-Level sein)
+// Callback for the homescreen widget (must be top-level)
 @pragma('vm:entry-point')
 Future<void> interactiveCallback(Uri? uri) async {
   if (uri?.host == 'log_simple_meal') {
-    // 1. Prüfen, ob die Haupt-App (Main Isolate) noch im Hintergrund läuft
+    // 1. Check if the main app (Main Isolate) is still running in the background
     final SendPort? sendPort = IsolateNameServer.lookupPortByName('home_widget_port');
     if (sendPort != null) {
-      // App läuft! Wir delegieren die Aufgabe an die Haupt-App, um Hive-Konflikte zu vermeiden
+      // App is running! Delegate task to the main app to avoid Hive lock collisions
       sendPort.send('log_simple_meal');
       return;
     }
 
-    // 2. App ist komplett geschlossen. Wir können Hive sicher initialisieren.
+    // 2. App is completely closed. We can safely initialize Hive.
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(MealAdapter());
@@ -46,7 +43,7 @@ void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     
-    // Widget Callback registrieren (HomeWidget funktioniert nicht im Web-Browser)
+    // Register widget callback (HomeWidget does not work in web browser)
     if (!kIsWeb) {
       try {
         HomeWidget.registerInteractivityCallback(interactiveCallback);
@@ -57,20 +54,16 @@ void main() async {
 
     tz.initializeTimeZones();
     
-    // Lokalisierung für Deutsch initialisieren
     await initializeDateFormatting('de_DE', null);
     
     await Hive.initFlutter();
     Hive.registerAdapter(MealAdapter());
     
-    // MealService initialisieren
     final mealService = MealService();
     await mealService.init();
 
-    // SettingsService initialisieren
     final settingsService = SettingsService.instance;
 
-    // NotificationService initialisieren
     final notificationService = NotificationService();
     await notificationService.init();
     if (settingsService.notifications) {
@@ -83,7 +76,7 @@ void main() async {
       await notificationService.scheduleMealReminders(l10n);
     }
     
-    // Hintergrund-Kommunikation einrichten (IsolateNameServer)
+    // Setup background communication (IsolateNameServer)
     final port = ReceivePort();
     IsolateNameServer.removePortNameMapping('home_widget_port');
     IsolateNameServer.registerPortWithName(port.sendPort, 'home_widget_port');
@@ -100,7 +93,7 @@ void main() async {
       ),
     );
   } catch (e, stacktrace) {
-    // Failsafe: Zeige den genauen Fehler auf dem Bildschirm an (auch im Release-Modus)
+    // Failsafe: Show the exact error on screen (even in release mode)
     runApp(
       MaterialApp(
         home: Scaffold(

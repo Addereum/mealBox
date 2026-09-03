@@ -6,7 +6,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'meal_service.dart';
-import '../models/meal.dart';
 
 class ExportService {
   static final ExportService _instance = ExportService._internal();
@@ -18,7 +17,6 @@ class ExportService {
   Future<void> exportAsCsv() async {
     final allMealsMap = await _mealService.getAllMeals();
     
-    // Header
     List<List<dynamic>> rows = [
       ["Datum", "Uhrzeit", "Mahlzeit", "Energie-Level", "Medikamente"]
     ];

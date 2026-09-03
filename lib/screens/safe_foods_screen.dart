@@ -35,7 +35,7 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
 
   Future<void> _logSafeFood(String food) async {
     final mealService = Provider.of<MealService>(context, listen: false);
-    await mealService.addMeal(food); // Direkt als Namen speichern
+    await mealService.addMeal(food); // Save directly as name
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppLocalizations.of(context)!.mealAdded(food)),

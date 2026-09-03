@@ -2,10 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import '../models/meal.dart';
+import '../constants.dart';
 
 class MealService with ChangeNotifier { 
-  static const String _boxName = 'mealBox';
-  static const String _waterBoxName = 'waterBox';
   
   static final MealService _instance = MealService._internal();
   factory MealService() => _instance;
@@ -15,8 +14,8 @@ class MealService with ChangeNotifier {
   Box<int>? _waterBox;
   
   Future<void> init() async {
-    _box = await Hive.openBox(_boxName);
-    _waterBox = await Hive.openBox<int>(_waterBoxName);
+    _box = await Hive.openBox(AppConstants.mealBoxName);
+    _waterBox = await Hive.openBox<int>(AppConstants.waterBoxName);
     await _migrateDataIfNeeded();
   }
 
@@ -56,7 +55,7 @@ class MealService with ChangeNotifier {
   
   Future<Box> _getBox() async {
     if (_box == null || !_box!.isOpen) {
-      _box = await Hive.openBox(_boxName);
+      _box = await Hive.openBox(AppConstants.mealBoxName);
     }
     return _box!;
   }
@@ -83,7 +82,7 @@ class MealService with ChangeNotifier {
 
     final dateKey = meal.dateKey;
     List<dynamic> meals = box.get(dateKey, defaultValue: []);
-    meals.add(meal); // Nutzt TypeAdapter statt toMap()
+    meals.add(meal); // Uses TypeAdapter instead of toMap()
 
     await box.put(dateKey, meals);
     
@@ -152,7 +151,7 @@ class MealService with ChangeNotifier {
 
   Future<Box<int>> _getWaterBox() async {
     if (_waterBox == null || !_waterBox!.isOpen) {
-      _waterBox = await Hive.openBox<int>(_waterBoxName);
+      _waterBox = await Hive.openBox<int>(AppConstants.waterBoxName);
     }
     return _waterBox!;
   }

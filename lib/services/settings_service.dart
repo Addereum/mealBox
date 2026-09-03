@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import '../constants.dart';
 
 class SettingsService with ChangeNotifier {
-  static const String _boxName = 'settingsBox';
   static const String _simpleModeKey = 'simpleMode';
   static const String _themeModeKey = 'themeMode';
   static const String _notificationsKey = 'notifications';
@@ -40,10 +40,10 @@ class SettingsService with ChangeNotifier {
   List<String> get mealNames => _mealNames;
 
   Future<Box> _getBox() async {
-    if (!Hive.isBoxOpen(_boxName)) {
-      return await Hive.openBox(_boxName);
+    if (!Hive.isBoxOpen(AppConstants.settingsBoxName)) {
+      return await Hive.openBox(AppConstants.settingsBoxName);
     }
-    return Hive.box(_boxName);
+    return Hive.box(AppConstants.settingsBoxName);
   }
 
   Future<void> _loadSettings() async {
@@ -95,7 +95,7 @@ class SettingsService with ChangeNotifier {
   Future<void> setThemeMode(ThemeMode mode) async {
     final box = await _getBox();
 
-    // nur light/dark speichern, alles andere wird zu light
+    // Only save light/dark, everything else defaults to light
     final themeStr = (mode == ThemeMode.dark) ? 'dark' : 'light';
 
     await box.put(_themeModeKey, themeStr);

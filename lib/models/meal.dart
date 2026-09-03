@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart'; // WICHTIG: Diesen Import hinzufügen!
+import 'package:intl/intl.dart'; 
 import 'package:hive/hive.dart';
 
 part 'meal.g.dart';
@@ -69,7 +69,7 @@ class Meal {
 
   String get dateKey => '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
   
-  // Factory für nachgetragene Mahlzeiten
+  // Factory for retroactively added meals
   factory Meal.loggedLater(String mealType, DateTime actualTime, {String? energyLevel, bool? tookMeds, String? imagePath}) {
     final now = DateTime.now();
     return Meal(
