@@ -1,0 +1,210 @@
+{
+  "@@locale": "es",
+  "appTitle": "MealBox 🍱",
+  "breakfast": "Desayuno",
+  "lunch": "Almuerzo",
+  "dinner": "Cena",
+  "snack": "Snack",
+  "meal": "Comida",
+  "addMeal": "Agregar",
+  "addMealTitle": "Agregar Comida",
+  "history": "Historial",
+  "settings": "Configuración",
+  "safeFoods": "Comidas Seguras",
+  "safeFoodsDesc": "Agrega comida que siempre puedas comer cuando nada más funcione.",
+  "therapyExport": "Exportar Terapia",
+  "exportPdf": "Exportar como PDF",
+  "exportCsv": "Exportar como CSV",
+  "exportSuccess": "✅ Datos exportados correctamente",
+  "noEnergy": "¿Sin energía?",
+  "sosTitle": "Ayuda 🆘",
+  "sosMessageFallback": "Bebe un vaso de agua, come una cucharada de mantequilla de maní o dale una mordida a una manzana. ¡Todo sirve!",
+  "sosMessagePrefix": "¿Te sientes sin energía? Prueba esto:\n\n",
+  "cancel": "Cancelar",
+  "logNow": "¡Regístralo!",
+  "delete": "Eliminar",
+  "deleteConfirmTitle": "Confirmar eliminación",
+  "deleteConfirmMessage": "¿Estás seguro/a de que quieres eliminar {mealType} de la(s) {time}?",
+  "@deleteConfirmMessage": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "todayEaten": "Comido hoy: {count} {count, plural, =1{comida} other{comidas}}",
+  "@todayEaten": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "water": "Agua: {count} {count, plural, =1{vaso} other{vasos}}",
+  "@water": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyStats": "Estadísticas Semanales",
+  "streakDays": "{count} días",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsEncouragement": "¡Buen trabajo! En los días con +3 comidas, tu energía es notablemente mejor. 🚀",
+  "energyHigh": "⚡ Alto",
+  "energyMed": "🔋 Medio",
+  "energyLow": "🪫 Bajo",
+  "tookMeds": "¿Tomar medicamento?",
+  "loggedLate": "Agregado tarde",
+  "timeAt": "a las {time}",
+  "@timeAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "noMealsToday": "Sin comidas aún",
+  "pressAddToStart": "¡Presiona Agregar para empezar!",
+  "breakfastReminderTitle": "¡Hora del desayuno! 🍳",
+  "breakfastReminderBody": "¿Ya has desayunado? Registra tu comida.",
+  "lunchReminderTitle": "¡Hora del almuerzo! 🥗",
+  "lunchReminderBody": "No olvides registrar tu comida.",
+  "dinnerReminderTitle": "¡Hora de la cena! 🍽️",
+  "dinnerReminderBody": "Hora de la cena. ¡Recuerda registrar tu comida!",
+  "testNotificationTitle": "Notificación de prueba 🚀",
+  "testNotificationBody": "Si ves esto, ¡las notificaciones funcionan!",
+  "noMealsDesc": "Presiona agregar para comenzar a registrar tu día.",
+  "simpleMode": "Simple",
+  "mealAdded": "{mealType} agregado ✅",
+  "@mealAdded": {
+    "placeholders": {
+      "mealType": {
+        "type": "String"
+      }
+    }
+  },
+  "themeMode": "Tema",
+  "themeSystem": "Sistema",
+  "themeLight": "Claro",
+  "themeDark": "Oscuro",
+  "notifications": "Notificaciones",
+  "reminders": "Recordatorios (Desayuno, Almuerzo, Cena)",
+  "simpleModeDesc": "Modo simple (Omitir sugerencias de hora/energía)",
+  "showStats": "Mostrar estadísticas semanales en la pantalla de inicio",
+  "addSafeFood": "Agregar Comida Segura",
+  "newSafeFood": "Nueva Comida Segura",
+  "save": "Guardar",
+  "deleteData": "Eliminar todos los datos",
+  "deleteDataWarning": "Esto eliminará todas tus comidas registradas. Esta acción no se puede deshacer.",
+  "dataDeleted": "Todos los datos han sido eliminados",
+  "appVersion": "Versión {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "todayMealsTitle": "Comidas de hoy",
+  "exportFailed": "❌ Error al exportar: {error}",
+  "@exportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "importDataConfirmTitle": "¿Importar datos?",
+  "importDataConfirmDesc": "Esto reemplazará TODAS tus comidas existentes.\n¿Estás seguro/a que quieres continuar?",
+  "importBtn": "Importar",
+  "importSuccess": "✅ Datos importados correctamente",
+  "importFailed": "❌ Error al importar: {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "clearDataConfirmTitle": "¿Quieres eliminar todos los datos?",
+  "clearDataConfirmDesc": "Esto eliminará TODAS tus comidas existentes y no se puede deshacer.\n¿Estás seguro/a que quieres continuar?",
+  "clearDataBtn": "Eliminar",
+  "clearDataSuccess": "✅ Todos los datos han sido eliminados",
+  "clearDataFailed": "❌ Error al eliminar: {error}",
+  "@clearDataFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "simpleModeDescSub": "Solo un botón, sin opciones",
+  "renameMeals": "Renombrar comidas",
+  "renameMealsDesc": "Establece nombres y emojis personalizados para los botones",
+  "remindersDesc": "Activar recordatorios leves",
+  "testNotification": "Notificación de prueba",
+  "testNotificationDesc": "Enviar un mensaje de prueba inmediato",
+  "testNotificationSent": "¡Notificación de prueba enviada!",
+  "medicationTracker": "Registro de medicamentos",
+  "medicationTrackerDesc": "Preguntar por medicamentos al registrar una comida",
+  "weeklyStatsDesc": "Mostrar resumen de racha en la pantalla de inicio",
+  "exportPdfDesc": "Resumen para un doctor/terapeuta",
+  "exportCsvName": "Exportar como CSV (Excel)",
+  "exportCsvDesc": "Datos sin procesar en formato de tabla",
+  "dataManagement": "Gestionar datos",
+  "exportData": "Exportar datos",
+  "exportDataDesc": "Crear una copia de seguridad JSON",
+  "importData": "Importar datos",
+  "importDataDesc": "Restaurar desde un archivo de copia de seguridad",
+  "clearDataWarn": "Advertencia: Esta acción no se puede deshacer",
+  "darkModeDesc": "Activar modo oscuro",
+  "privacy": "Privacidad",
+  "privacyDesc": "Todos los datos se almacenan localmente",
+  "privacyDialogText": "Todos los datos se almacenan localmente en su dispositivo. No se envía información a ningún servidor.\n\nLas copias de seguridad solo se crean con su consentimiento explícito.",
+  "ok": "De acuerdo",
+  "developer": "Desarrollador",
+  "githubRepo": "Repositorio GitHub",
+  "githubRepoDesc": "Ver código fuente y contribuir",
+  "devWebsite": "Sitio web del desarrollador",
+  "devWebsiteDesc": "Más información del autor",
+  "linkError": "No se pudo abrir el enlace",
+  "aboutApp": "Sobre MealBox",
+  "historyTitle": "Historial de Comidas 📅",
+  "mealDeleted": "Comida eliminada",
+  "noMealsOnDay": "Sin comidas este día",
+  "totalMeals": "Total: {count} {count, plural, =1{comida} other{comidas}}",
+  "@totalMeals": { "placeholders": { "count": { "type": "int" } } },
+  "safeFoodsTitle": "Comidas Seguras 🛟",
+  "noSafeFoods": "Aún no se han agregado comidas seguras.",
+  "safeFoodName": "Nombre de la comida",
+  "safeFoodAction": "¿Qué quieres hacer?",
+  "logFood": "Registro (Energía baja)",
+  "time": "Hora",
+  "energyLevelText": "Nivel de energía",
+  "unknown": "Desconocido",
+  "weekPrefix": "Semana de",
+  "whatDidYouEat": "¿Qué comiste? 🍽️",
+  "selectTime": "Seleccionar hora",
+  "resetToNow": "Restablecer actual",
+  "loggedLateHint": "Se registrará como Agregado tarde",
+  "currentTimeHint": "Si no se selecciona una, se utiliza la hora actual.",
+  "energyLevelOpt": "Nivel de energía (opcional):",
+  "addPhoto": "Agregar imagen",
+  "mealNumber": "Comida {number}",
+  "@mealNumber": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  }
+}
