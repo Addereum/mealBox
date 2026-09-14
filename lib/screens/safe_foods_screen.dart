@@ -12,6 +12,21 @@ class SafeFoodsScreen extends StatefulWidget {
 }
 
 class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
+  static const List<String> _presetSafeFoodIcons = [
+    '🍕',
+    '🍟',
+    '🥪',
+    '🥣',
+    '🍎',
+    '🥨',
+    '🍝',
+    '🍚',
+    '🍌',
+    '🧀',
+    '🍞',
+    '🥛',
+  ];
+
   final TextEditingController _controller = TextEditingController();
   final SettingsService _settingsService = SettingsService.instance;
   bool _isAdding = false;
@@ -31,6 +46,16 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
         _isAdding = false;
       });
     }
+  }
+
+  void _selectPresetIcon(String icon) {
+    final currentText = _controller.text.trimLeft();
+    final nextText = currentText.isEmpty ? '$icon ' : '$icon $currentText';
+
+    _controller.value = TextEditingValue(
+      text: nextText,
+      selection: TextSelection.collapsed(offset: nextText.length),
+    );
   }
 
   Future<void> _logSafeFood(String food) async {
@@ -121,26 +146,52 @@ class _SafeFoodsScreenState extends State<SafeFoodsScreen> {
                     right: 16,
                     top: 16,
                   ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            hintText: 'Z.B. Toast mit Butter',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                          ),
-                          onSubmitted: (_) => _addFood(),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: _presetSafeFoodIcons
+                              .map(
+                                (icon) => Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: ActionChip(
+                                    label: Text(
+                                      icon,
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                    tooltip: 'Add $icon',
+                                    onPressed: () => _selectPresetIcon(icon),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
-                      SizedBox(width: 8),
-                      IconButton(
-                        icon: Icon(Icons.check_circle, color: Colors.teal, size: 36),
-                        onPressed: _addFood,
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _controller,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText: 'Z.B. Toast mit Butter',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                              ),
+                              onSubmitted: (_) => _addFood(),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          IconButton(
+                            icon: Icon(Icons.check_circle, color: Colors.teal, size: 36),
+                            onPressed: _addFood,
+                          ),
+                        ],
                       ),
                     ],
                   ),
